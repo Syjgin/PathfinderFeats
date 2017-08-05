@@ -1,0 +1,12 @@
+
+\.gradle/3\.3/taskArtifacts/
+
+\.idea/
+
+build/android-profile/
+
+build/intermediates/dex-cache/
+
+*.log
+
+build/kotlin-build/caches/

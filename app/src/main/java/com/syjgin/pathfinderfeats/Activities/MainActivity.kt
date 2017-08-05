@@ -1,11 +1,15 @@
-package com.syjgin.pathfinderfeats
+package com.syjgin.pathfinderfeats.Activities
 
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.view.View
+import com.syjgin.pathfinderfeats.App.MainApp
+import com.syjgin.pathfinderfeats.Models.Feat
+import com.syjgin.pathfinderfeats.PersistentData.MainDatabaseSource
+import com.syjgin.pathfinderfeats.R
+import io.requery.query.Result
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,10 +20,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener(View.OnClickListener { view ->
+        fab.setOnClickListener({ view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         })
+        val result : Result<Feat> = MainApp.dataStore?.select(Feat::class).get()
     }
 
 }

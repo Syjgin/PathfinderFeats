@@ -11,11 +11,13 @@ import io.requery.sql.EntityDataStore
 /**
  * Created by user1 on 05.08.17.
  */
-class App : Application() {
+class MainApp : Application() {
     companion object {
         var dataStore : ReactiveEntityStore<Persistable>? = null
     }
-    init {
+
+    override fun onCreate() {
+        super.onCreate()
         val model = EntityModelBuilder("main").build()
         val source = MainDatabaseSource(this, model, 1)
         val configuration = source.configuration

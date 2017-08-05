@@ -1,13 +1,11 @@
-package com.syjgin.pathfinderfeats
+package com.syjgin.pathfinderfeats.PersistentData
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import io.requery.android.sqlite.DatabaseSource
+import com.syjgin.pathfinderfeats.R
 import io.requery.android.sqlitex.SqlitexDatabaseSource
 import io.requery.meta.EntityModel
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.io.StringWriter
 
 /**
  * Created by user1 on 04.08.17.
