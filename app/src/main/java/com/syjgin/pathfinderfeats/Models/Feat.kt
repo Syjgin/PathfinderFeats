@@ -3,94 +3,85 @@ package com.syjgin.pathfinderfeats.Models
 import io.requery.Entity
 import io.requery.Index
 import io.requery.Key
+import io.requery.Persistable
 
 /**
  * Created by user1 on 05.08.17.
  */
 
 @Entity
-abstract class Feat {
+interface Feat : Persistable {
 
-    @Key
-    abstract fun getId() : Int
+    @get : Key
+    var id : Int
 
-    abstract fun getName() : String
+    var name : String
 
-    abstract fun getType() : String
+    var type : String
 
-    abstract fun getDescription() : String
+    var description : String
 
-    abstract fun getPrerequisites() : String
+    var prerequisites : String
 
-    @Index("prerequisite_feats")
-    abstract fun getPrerequisitesFeats() : String
+    var prerequisite_feats : String
 
-    abstract fun getBenefit() : String
+    var benefit : String
 
-    abstract fun getNormal() : String
+    var normal : String
 
-    abstract fun getSpecial() : String
+    var special : String
 
-    abstract fun getSource() : String
+    var source : String
 
-    abstract fun getFullText() : String
+    var fullText : String
 
-    abstract fun getTeamwork() : Boolean
+    var teamwork : Boolean
 
-    abstract fun getCritical() : Boolean
+    var critical : Boolean
 
-    abstract fun getGrit() : Boolean
+    var grit : Boolean
 
-    abstract fun getStyle() : Boolean
+    var style : Boolean
 
-    abstract fun getPerformance() : Boolean
+    var performance : Boolean
 
-    abstract fun getRacial() : Boolean
+    var racial : Boolean
 
-    @Index("companion_familiar")
-    abstract fun getCompanionFamiliar() : Boolean
+    var companion_familiar : Boolean
 
-    abstract fun getRaceName() : String
+    var raceName : String
 
-    abstract fun getNote() : String
+    var note : String
 
-    abstract fun getGoal() : String
+    var goal : String
 
-    @Index("completion_benefit")
-    abstract fun getCompletionBenefit() : String
+    var completion_benefit : String
 
-    abstract fun getMultiples() : Boolean
+    var Multiples : Boolean
 
-    @Index("suggested_traits")
-    abstract fun getSuggestedTraits() : String
+    var suggested_traits : String
 
-    @Index("prerequisite_skills")
-    abstract fun getPrerequisiteSkills() : String
+    var prerequisite_skills : String
 
-    abstract fun getPanache() : Boolean
+    var panache : Boolean
 
-    abstract fun getBetrayal() : Boolean
+    var betrayal : Boolean
 
-    abstract fun getTargeting() : Boolean
+    var targeting : Boolean
 
-    abstract fun getEsoteric() : Boolean
+    var esoteric : Boolean
 
-    abstract fun getStare() : Boolean
+    var stare : Boolean
 
-    @Index("weapon_mastery")
-    abstract fun getWeaponMastery() : Boolean
+    var weapon_mastery : Boolean
 
-    @Index("item_mastery")
-    abstract fun getItemMastery() : Boolean
+    var item_mastery : Boolean
 
-    @Index("armor_mastery")
-    abstract fun getArmorMastery() : Boolean
+    var armor_mastery : Boolean
 
-    @Index("shield_mastery")
-    abstract fun getShieldMastery() : Boolean
+    var shield_mastery : Boolean
 
-    @Index("blood_hex")
-    abstract fun getBloodHex() : Boolean
+    var blood_hex : Boolean
 
-    abstract fun getTrick() : Boolean
+    var trick : Boolean
 }

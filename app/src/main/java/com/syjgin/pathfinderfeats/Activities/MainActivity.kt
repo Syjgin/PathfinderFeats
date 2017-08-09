@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         })
-        val result : Result<Feat> = MainApp.dataStore?.select(Feat::class).get()
+        //val result : Result<Feat> = MainApp.dataStore?.select(Feat::class)
     }
 
 }
