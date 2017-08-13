@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         })
-        val result : Result<Feat> = (application as MainApp).dataStore.select(Feat::class).get()
+        val result   = (application as MainApp).dataStore.select(Feat::class).get()
         result.each {
             Log.d("TAG", it.name)
         }

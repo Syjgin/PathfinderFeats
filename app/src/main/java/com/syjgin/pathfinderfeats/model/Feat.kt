@@ -4,11 +4,13 @@ import android.os.Parcelable
 import io.requery.Entity
 import io.requery.Key
 import io.requery.Persistable
+import io.requery.Table
 
 /**
  * Created by user1 on 05.08.17.
  */
 
+@Table(name = "feats")
 @Entity
 interface Feat : Parcelable, Persistable {
 
@@ -49,7 +51,7 @@ interface Feat : Parcelable, Persistable {
 
     var companion_familiar : Boolean
 
-    var raceName : String
+    var race_name : String
 
     var note : String
 

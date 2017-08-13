@@ -2,6 +2,7 @@ package com.syjgin.pathfinderfeats.persistentData
 
 import android.content.Context
 import com.syjgin.pathfinderfeats.R
+import io.requery.android.database.sqlite.SQLiteDatabase
 import io.requery.android.sqlitex.SqlitexDatabaseSource
 import io.requery.meta.EntityModel
 import java.io.BufferedReader
@@ -45,7 +46,6 @@ class MainDatabaseSource(context: Context?, model: EntityModel?, version: Int) :
             val db = writableDatabase
             val inputStream = context?.resources?.openRawResource(R.raw.dump)
             val reader = BufferedReader(InputStreamReader(inputStream))
-            val builder = StringBuilder()
             var line : String?
             var end = false
             while (!end) {
@@ -53,11 +53,9 @@ class MainDatabaseSource(context: Context?, model: EntityModel?, version: Int) :
                 if(line == null) {
                     end = true
                 } else {
-                    builder.append(line)
+                    db.execSQL(line)
                 }
             }
-            db.execSQL(builder.toString())
-            onCreate(db)
             DataStorage.setDbInitialized(context)
         }
     }
