@@ -10,3 +10,4 @@ build/intermediates/dex-cache/
 *.log
 
 build/kotlin-build/caches/
+local.properties

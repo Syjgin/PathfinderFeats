@@ -15,6 +15,10 @@ import io.requery.reactivex.KotlinReactiveEntityStore
  */
 class MainApp : Application() {
 
+    companion object {
+        var instance : MainApp? = null
+    }
+
     val dataStore : KotlinReactiveEntityStore<Persistable> by lazy {
         val model = Models.DEFAULT;
         val source = MainDatabaseSource(this, model, 1)
@@ -23,6 +27,6 @@ class MainApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        instance = this
     }
 }
