@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Pathfinder feats</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">All Feats</string>
+    <string name="child_feats">Children feats</string>
+    <string name="parent_feats">Parent feats</string>
+    <string name="child_feats_title">Children feats of %s</string>
+    <string name="parent_feats_title">Parent feats of %s</string>
 </resources>
