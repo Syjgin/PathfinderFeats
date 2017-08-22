@@ -17,6 +17,9 @@ class FeatListItemHolder(view : View) : RecyclerView.ViewHolder(view) {
     companion object {
         fun bind(holder : FeatListItemHolder?, feat : Feat, handler: FeatListHandler) {
             holder?.titleView?.text = feat.name
+            holder?.titleView?.setOnClickListener {
+                handler.openFeatDetails(feat)
+            }
             holder?.childIcon?.setOnClickListener {
                 handler.openChildFeat(feat)
             }

@@ -5,4 +5,7 @@
     <string name="parent_feats">Parent feats</string>
     <string name="child_feats_title">Children feats of %s</string>
     <string name="parent_feats_title">Parent feats of %s</string>
+    <string name="type_title">Type: %s</string>
+    <string name="prerequisites_title">Prerequisites: %s</string>
+    <string name="prerequisite_feats">Prerequisite Feats: %s</string>
 </resources>

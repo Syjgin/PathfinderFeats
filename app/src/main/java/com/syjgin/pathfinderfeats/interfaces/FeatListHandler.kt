@@ -8,6 +8,7 @@ import com.syjgin.pathfinderfeats.model.Feat
 interface FeatListHandler {
     fun openParentFeat(feat : Feat)
     fun openChildFeat(feat : Feat)
+    fun openFeatDetails(feat : Feat)
     fun isParentMode() : Boolean
     fun isChildMode() : Boolean
     fun featId() : Int?

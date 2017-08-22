@@ -13,7 +13,8 @@ import com.syjgin.pathfinderfeats.interfaces.FeatListHandler
 import com.syjgin.pathfinderfeats.model.Feat
 import java.util.concurrent.Executors
 
-class MainActivity : AppCompatActivity(), FeatListHandler {
+class MainActivity : BackButtonActivity(), FeatListHandler {
+
     private var parentMode = false
     override fun isParentMode(): Boolean = parentMode
 
@@ -45,6 +46,14 @@ class MainActivity : AppCompatActivity(), FeatListHandler {
         startActivity(intent)
     }
 
+    override fun openFeatDetails(feat: Feat) {
+        val intent = Intent(this, FeatDetailsActivity::class.java)
+        val bundle = Bundle()
+        bundle.putSerializable(FeatDetailsActivity.FEAT, feat)
+        intent.putExtras(bundle)
+        startActivity(intent)
+    }
+
     companion object {
         const val FEAT_ID = "FEAT_ID"
         const val FEAT_NAME = "FEAT_NAME"
@@ -54,12 +63,10 @@ class MainActivity : AppCompatActivity(), FeatListHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+        createToolbar()
         getParametersFromIntent()
         if(parentMode || childMode) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp)
+            displayBackButton()
         }
         if(parentMode) {
             setTitle(String.format(getString(R.string.parent_feats_title), featName))
@@ -85,12 +92,5 @@ class MainActivity : AppCompatActivity(), FeatListHandler {
         val name = intent.getStringExtra(FEAT_NAME)
         if(name != null)
             featName = name
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item?.itemId == android.R.id.home) {
-            onBackPressed()
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

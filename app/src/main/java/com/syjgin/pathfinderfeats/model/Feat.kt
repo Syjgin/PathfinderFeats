@@ -5,6 +5,7 @@ import io.requery.Entity
 import io.requery.Key
 import io.requery.Persistable
 import io.requery.Table
+import java.io.Serializable
 
 /**
  * Created by user1 on 05.08.17.
@@ -12,7 +13,7 @@ import io.requery.Table
 
 @Table(name = "feats")
 @Entity
-interface Feat : Parcelable, Persistable {
+interface Feat : Parcelable, Persistable, Serializable {
 
     @get : Key
     var id : Int

@@ -9,14 +9,14 @@
     <TextView
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textSize="16sp"
         android:textColor="@android:color/black"
         android:id="@+id/featTitle"/>
     <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_arrow_downward_black_24dp"
+        android:src="@drawable/children"
         android:contentDescription="@string/child_feats"
         android:id="@+id/childFeats"
         android:layout_marginLeft="10dp"
@@ -24,7 +24,7 @@
     <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:src="@drawable/ic_arrow_upward_black_24dp"
+        android:src="@drawable/parent"
         android:contentDescription="@string/parent_feats"
         android:id="@+id/parentFeats"
         android:layout_marginLeft="10dp"
