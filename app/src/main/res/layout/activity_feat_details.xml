@@ -53,5 +53,26 @@
             android:textSize="14sp"
             android:paddingBottom="10dp"
             android:textColor="@android:color/black"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/benefit"
+            android:textSize="14sp"
+            android:paddingBottom="10dp"
+            android:textColor="@android:color/black"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/normal"
+            android:textSize="14sp"
+            android:paddingBottom="10dp"
+            android:textColor="@android:color/black"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/special"
+            android:textSize="14sp"
+            android:paddingBottom="10dp"
+            android:textColor="@android:color/black"/>
     </LinearLayout>
 </LinearLayout>

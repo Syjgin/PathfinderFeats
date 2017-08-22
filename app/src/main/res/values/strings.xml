@@ -5,7 +5,10 @@
     <string name="parent_feats">Parent feats</string>
     <string name="child_feats_title">Children feats of %s</string>
     <string name="parent_feats_title">Parent feats of %s</string>
-    <string name="type_title">Type: %s</string>
-    <string name="prerequisites_title">Prerequisites: %s</string>
-    <string name="prerequisite_feats">Prerequisite Feats: %s</string>
+    <string name="type_title"><![CDATA[<b>Type:</b> %s]]></string>
+    <string name="prerequisites_title"><![CDATA[<b>Prerequisites:</b> %s]]></string>
+    <string name="prerequisite_feats"><![CDATA[<b>Prerequisite Feats:</b> %s]]></string>
+    <string name="benefit_title"><![CDATA[<b>Benefit:</b> %s]]></string>
+    <string name="normal_title"><![CDATA[<b>Normal:</b> %s]]></string>
+    <string name="special_title"><![CDATA[<b>Special:</b> %s]]></string>
 </resources>

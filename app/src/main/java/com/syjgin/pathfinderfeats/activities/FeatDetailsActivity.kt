@@ -2,6 +2,7 @@ package com.syjgin.pathfinderfeats.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
@@ -46,30 +47,35 @@ class FeatDetailsActivity : BackButtonActivity() {
         this.feat = feat
         setTitle(feat.name)
         val typeText = findViewById(R.id.featType) as TextView
-        typeText.setText(String.format(getString(R.string.type_title), feat.type))
+        typeText.setText(Html.fromHtml(String.format(getString(R.string.type_title), feat.type)))
         val descriptionText = findViewById(R.id.description) as TextView
         descriptionText.setText(feat.description)
         val prerequisitesText = findViewById(R.id.prerequisites) as TextView
-        if(feat.prerequisites as String? != null)
-            prerequisitesText.setText(String.format(getString(R.string.prerequisites_title), feat.prerequisites))
-        else
-            prerequisitesText.visibility = View.GONE
+        displayCharacteristic(prerequisitesText, feat.prerequisites, R.string.prerequisites_title)
         val childFeats = findViewById(R.id.childFeats) as TextView
-        if(feat.prerequisite_feats as String? == null) {
-            childFeats.visibility = View.GONE
-        } else if(feat.prerequisite_feats.isEmpty()) {
-            childFeats.visibility = View.GONE
+        displayCharacteristic(childFeats, feat.prerequisite_feats, R.string.prerequisite_feats)
+        childFeats.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            val bundle = Bundle()
+            bundle.putBoolean(MainActivity.PARENT_MODE, true)
+            bundle.putInt(MainActivity.FEAT_ID, feat.id)
+            bundle.putString(MainActivity.FEAT_NAME, feat.name)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
+        val benefitText = findViewById(R.id.benefit) as TextView
+        displayCharacteristic(benefitText, feat.benefit, R.string.benefit_title)
+        val normalText = findViewById(R.id.normal) as TextView
+        displayCharacteristic(normalText, feat.normal, R.string.normal_title)
+        val specialText = findViewById(R.id.special) as TextView
+        displayCharacteristic(specialText, feat.special, R.string.special_title)
+    }
+
+    private fun displayCharacteristic(textView: TextView, text: String?, format: Int) {
+        if(text == null) {
+            textView.visibility = View.GONE
         } else {
-            childFeats.setText(String.format(getString(R.string.prerequisite_feats), feat.prerequisite_feats))
-            childFeats.setOnClickListener {
-                val intent = Intent(this, MainActivity::class.java)
-                val bundle = Bundle()
-                bundle.putBoolean(MainActivity.PARENT_MODE, true)
-                bundle.putInt(MainActivity.FEAT_ID, feat.id)
-                bundle.putString(MainActivity.FEAT_NAME, feat.name)
-                intent.putExtras(bundle)
-                startActivity(intent)
-            }
+            textView.text = Html.fromHtml(String.format(getString(format), text))
         }
     }
 }
