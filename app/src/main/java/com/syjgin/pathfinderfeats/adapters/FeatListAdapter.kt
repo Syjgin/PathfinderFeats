@@ -1,5 +1,6 @@
 package com.syjgin.pathfinderfeats.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -40,7 +41,10 @@ class FeatListAdapter(handler: FeatListHandler) : QueryRecyclerAdapter<Feat, Fea
         if(featListHandler.isChildMode()) {
             val result = MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
             if(result.count() > 0) {
-                return MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::prerequisite_feats.like(result.first().name).and(Feat::name.notLike(result.first().name)))?.get() as Result<Feat>
+                return MainApp.instance?.dataStore?.select(Feat::class)
+                        ?.where(Feat::prerequisite_feats.like(result.first().name)
+                                .and(Feat::name.notLike(result.first().name)).
+                                and(Feat::type.eq(result.first().type)))?.get() as Result<Feat>
             } else {
                 return emptyResult()
             }
@@ -52,9 +56,13 @@ class FeatListAdapter(handler: FeatListHandler) : QueryRecyclerAdapter<Feat, Fea
                 var namesResult : ReactiveResult<Feat>? = null
                 for (name in namesList) {
                     if(namesResult == null) {
-                        namesResult = MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::name.eq(name))?.get()
+                        namesResult = MainApp.instance?.dataStore?.select(Feat::class)
+                                ?.where(Feat::name.eq(name).and(Feat::type.eq(result.first().type)))
+                                ?.get()
                     } else {
-                        val nextResult = MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::name.eq(name))?.get()
+                        val nextResult = MainApp.instance?.dataStore?.select(Feat::class)
+                                ?.where(Feat::name.eq(name).and(Feat::type.eq(result.first().type)))
+                                ?.get()
                         namesResult.plus(nextResult?.first())
                     }
                 }
