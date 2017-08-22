@@ -17,6 +17,7 @@ class FeatDetailsActivity : BackButtonActivity() {
 
     companion object {
         const val FEAT = "FEAT"
+        const val SEPARATOR = ", "
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,11 +46,11 @@ class FeatDetailsActivity : BackButtonActivity() {
 
     private fun initWithFeat(feat : Feat) {
         this.feat = feat
-        setTitle(feat.name)
+        title = feat.name
         val typeText = findViewById(R.id.featType) as TextView
-        typeText.setText(Html.fromHtml(String.format(getString(R.string.type_title), feat.type)))
+        displayCharacteristic(typeText, feat.type, R.string.type_title)
         val descriptionText = findViewById(R.id.description) as TextView
-        descriptionText.setText(feat.description)
+        descriptionText.text = feat.description
         val prerequisitesText = findViewById(R.id.prerequisites) as TextView
         displayCharacteristic(prerequisitesText, feat.prerequisites, R.string.prerequisites_title)
         val childFeats = findViewById(R.id.childFeats) as TextView
@@ -69,12 +70,58 @@ class FeatDetailsActivity : BackButtonActivity() {
         displayCharacteristic(normalText, feat.normal, R.string.normal_title)
         val specialText = findViewById(R.id.special) as TextView
         displayCharacteristic(specialText, feat.special, R.string.special_title)
+        val sourceText = findViewById(R.id.source) as TextView
+        displayCharacteristic(sourceText, feat.source, R.string.source_title)
+        val specialFeatureText = findViewById(R.id.specialFeatures) as TextView
+        val builder = StringBuilder()
+        addBooleanToBuilder(builder, feat.teamwork, R.string.teamwork)
+        addBooleanToBuilder(builder, feat.critical, R.string.critical)
+        addBooleanToBuilder(builder, feat.grit, R.string.grit)
+        addBooleanToBuilder(builder, feat.style, R.string.style)
+        addBooleanToBuilder(builder, feat.performance, R.string.performance)
+        addBooleanToBuilder(builder, feat.racial, R.string.racial)
+        addBooleanToBuilder(builder, feat.companion_familiar, R.string.companion_familiar)
+        addBooleanToBuilder(builder, feat.Multiples, R.string.multiples)
+        addBooleanToBuilder(builder, feat.panache, R.string.panache)
+        addBooleanToBuilder(builder, feat.betrayal, R.string.betrayal)
+        addBooleanToBuilder(builder, feat.targeting, R.string.targeting)
+        addBooleanToBuilder(builder, feat.esoteric, R.string.esoteric)
+        addBooleanToBuilder(builder, feat.stare, R.string.stare)
+        addBooleanToBuilder(builder, feat.weapon_mastery, R.string.weapon_mastery)
+        addBooleanToBuilder(builder, feat.item_mastery, R.string.item_mastery)
+        addBooleanToBuilder(builder, feat.armor_mastery, R.string.armor_mastery)
+        addBooleanToBuilder(builder, feat.shield_mastery, R.string.shield_mastery)
+        addBooleanToBuilder(builder, feat.blood_hex, R.string.blood_hex)
+        addBooleanToBuilder(builder, feat.trick, R.string.trick)
+        if(!builder.isEmpty()) {
+            displayCharacteristic(specialFeatureText, builder.toString().removeSuffix(SEPARATOR), R.string.special_features_title)
+        }
+        val raceText = findViewById(R.id.race) as TextView
+        displayCharacteristic(raceText, feat.race_name, R.string.race_title)
+        val noteText = findViewById(R.id.note) as TextView
+        displayCharacteristic(noteText, feat.note, R.string.note_title)
+        val goalText = findViewById(R.id.goal) as TextView
+        displayCharacteristic(goalText, feat.goal, R.string.goal_title)
+        val completeText = findViewById(R.id.completeonBenefit) as TextView
+        displayCharacteristic(completeText, feat.completion_benefit, R.string.complete_title)
+        val traitsText = findViewById(R.id.suggestedTraits) as TextView
+        displayCharacteristic(traitsText, feat.suggested_traits, R.string.traits_title)
+        val skillsText = findViewById(R.id.skills) as TextView
+        displayCharacteristic(skillsText, feat.prerequisite_feats, R.string.skills_title)
+    }
+
+    private fun addBooleanToBuilder(builder : StringBuilder, boolean: Boolean, resource : Int) {
+        if(boolean) {
+            builder.append(getString(resource))
+            builder.append(SEPARATOR)
+        }
     }
 
     private fun displayCharacteristic(textView: TextView, text: String?, format: Int) {
         if(text == null) {
             textView.visibility = View.GONE
         } else {
+            textView.visibility = View.VISIBLE
             textView.text = Html.fromHtml(String.format(getString(format), text))
         }
     }

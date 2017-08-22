@@ -12,10 +12,7 @@ import com.syjgin.pathfinderfeats.interfaces.FeatListHandler
 import com.syjgin.pathfinderfeats.model.Feat
 import com.syjgin.pathfinderfeats.model.Models
 import io.requery.android.QueryRecyclerAdapter
-import io.requery.kotlin.`in`
-import io.requery.kotlin.eq
-import io.requery.kotlin.like
-import io.requery.kotlin.notLike
+import io.requery.kotlin.*
 import io.requery.query.Result
 import io.requery.reactivex.ReactiveResult
 
@@ -54,14 +51,18 @@ class FeatListAdapter(handler: FeatListHandler) : QueryRecyclerAdapter<Feat, Fea
             val result = MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
             if(result.count() > 0) {
                 val namesList = result.first().prerequisite_feats.split(", ")
+                val filtered = mutableListOf<String>()
+                for (listElement : String in namesList) {
+                    filtered.add(listElement.replace(Regex("\\(.*\\)"), "").trim())
+                }
                 return MainApp.instance?.dataStore?.select(Feat::class)
-                        ?.where(Feat::name.`in`(namesList).and(Feat::type.eq(result.first().type)))
+                        ?.where(Feat::name.`in`(filtered).and(Feat::type.eq(result.first().type)))
                         ?.get() as Result<Feat>
             } else {
                 return emptyResult()
             }
         }
-        return MainApp.instance?.dataStore?.select(Feat::class)?.get() as Result<Feat>
+        return MainApp.instance?.dataStore?.select(Feat::class)?.orderBy(Feat::name.asc())?.get() as Result<Feat>
     }
 
     private fun emptyResult(): Result<Feat> =
