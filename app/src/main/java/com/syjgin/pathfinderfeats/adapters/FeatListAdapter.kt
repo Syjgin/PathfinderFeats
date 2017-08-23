@@ -19,7 +19,8 @@ import io.requery.reactivex.ReactiveResult
 /**
  * Created by maksimovoleg on 17/08/2017.
  */
-class FeatListAdapter(handler: FeatListHandler) : QueryRecyclerAdapter<Feat, FeatListItemHolder>(Models.DEFAULT, Feat::class.java) {
+class FeatListAdapter(handler: FeatListHandler) :
+        QueryRecyclerAdapter<Feat, FeatListItemHolder>(Models.DEFAULT, Feat::class.java) {
     val featListHandler: FeatListHandler = handler
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): FeatListItemHolder {
         val inflater = LayoutInflater.from(parent?.context)
@@ -36,19 +37,29 @@ class FeatListAdapter(handler: FeatListHandler) : QueryRecyclerAdapter<Feat, Fea
     }
 
     override fun performQuery(): Result<Feat> {
+        val mythic = "Mythic"
         if(featListHandler.isChildMode()) {
-            val result = MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
+            val result = MainApp.instance?.dataStore?.select(Feat::class)
+                    ?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
             if(result.count() > 0) {
-                return MainApp.instance?.dataStore?.select(Feat::class)
-                        ?.where(Feat::prerequisite_feats.like(result.first().name)
-                                .and(Feat::name.notLike(result.first().name)).
-                                and(Feat::type.eq(result.first().type)))?.get() as Result<Feat>
+                if(result.first().type == mythic) {
+                    return MainApp.instance?.dataStore?.select(Feat::class)
+                            ?.where(Feat::prerequisite_feats.like(result.first().name)
+                            .and(Feat::name.notLike(result.first().name))
+                                    .and(Feat::type.like(mythic)))
+                            ?.get() as Result<Feat>
+                } else {
+                    return MainApp.instance?.dataStore?.select(Feat::class)
+                            ?.where(Feat::prerequisite_feats.like(result.first().name))
+                            ?.get() as Result<Feat>
+                }
             } else {
                 return emptyResult()
             }
         }
         if(featListHandler.isParentMode()) {
-            val result = MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
+            val result = MainApp.instance?.dataStore?.select(Feat::class)
+                    ?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
             if(result.count() > 0) {
                 val namesList = result.first().prerequisite_feats.split(", ")
                 val filtered = mutableListOf<String>()
@@ -56,16 +67,18 @@ class FeatListAdapter(handler: FeatListHandler) : QueryRecyclerAdapter<Feat, Fea
                     filtered.add(listElement.replace(Regex("\\(.*\\)"), "").trim())
                 }
                 return MainApp.instance?.dataStore?.select(Feat::class)
-                        ?.where(Feat::name.`in`(filtered).and(Feat::type.eq(result.first().type)))
+                        ?.where(Feat::name.`in`(filtered).and(Feat::type.notLike(mythic)))
                         ?.get() as Result<Feat>
             } else {
                 return emptyResult()
             }
         }
-        return MainApp.instance?.dataStore?.select(Feat::class)?.orderBy(Feat::name.asc())?.get() as Result<Feat>
+        return MainApp.instance?.dataStore?.select(Feat::class)?.orderBy(Feat::name.asc())
+                ?.get() as Result<Feat>
     }
 
     private fun emptyResult(): Result<Feat> =
-            MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(-1))?.get() as Result<Feat> //TODO: return empty result explicitly
+            MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(-1))
+                    ?.get() as Result<Feat> //TODO: return empty result explicitly
 
 }

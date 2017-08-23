@@ -16,7 +16,17 @@ class FeatListItemHolder(view : View) : RecyclerView.ViewHolder(view) {
     var parentIcon : ImageView? = null
     companion object {
         fun bind(holder : FeatListItemHolder?, feat : Feat, handler: FeatListHandler) {
-            holder?.titleView?.text = feat.name
+            val name  = feat.name
+            val type = feat.type
+            if(feat.prerequisite_feats as String? == null) {
+                holder?.parentIcon?.visibility = View.INVISIBLE
+            } else {
+                if(feat.prerequisite_feats.isEmpty())
+                    holder?.parentIcon?.visibility = View.INVISIBLE
+                else
+                    holder?.parentIcon?.visibility = View.VISIBLE
+            }
+            holder?.titleView?.text = "$name ($type)"
             holder?.titleView?.setOnClickListener {
                 handler.openFeatDetails(feat)
             }
