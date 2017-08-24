@@ -1,12 +1,16 @@
 package com.syjgin.pathfinderfeats.activities
 
+import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.adapters.FeatListAdapter
 import com.syjgin.pathfinderfeats.interfaces.FeatListHandler
@@ -14,6 +18,8 @@ import com.syjgin.pathfinderfeats.model.Feat
 import java.util.concurrent.Executors
 
 class MainActivity : BackButtonActivity(), FeatListHandler {
+
+    private var adapter: FeatListAdapter? = null
 
     private var parentMode = false
     override fun isParentMode(): Boolean = parentMode
@@ -26,6 +32,10 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
 
     private var featName : String = ""
 
+    private var list : RecyclerView? = null
+
+    private var searchQuery : String = ""
+
     override fun openChildFeat(feat: Feat) {
         val intent = Intent(this, MainActivity::class.java)
         val bundle = Bundle()
@@ -34,6 +44,12 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
         bundle.putString(MainActivity.FEAT_NAME, feat.name)
         intent.putExtras(bundle)
         startActivity(intent)
+    }
+
+    override fun onEmptyResult() {
+        val notFoundCaption = findViewById(R.id.noResults)
+        notFoundCaption.visibility = View.VISIBLE
+        list?.visibility = View.GONE
     }
 
     override fun openParentFeat(feat: Feat) {
@@ -52,6 +68,24 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
         bundle.putSerializable(FeatDetailsActivity.FEAT, feat)
         intent.putExtras(bundle)
         startActivity(intent)
+    }
+
+    private fun isSearchRequestSubmitted() : Boolean {
+        if(intent.action == null)
+            return false
+        if(intent.action == Intent.ACTION_SEARCH) {
+            searchQuery = intent.getStringExtra(SearchManager.QUERY)
+            if(searchQuery.isNotEmpty()) {
+                displayBackButton()
+                title = searchQuery
+                adapter?.performSearch(searchQuery)
+                return true
+            } else {
+                finish()
+                return false
+            }
+        }
+        return false
     }
 
     companion object {
@@ -74,13 +108,14 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
         if(childMode) {
             setTitle(String.format(getString(R.string.child_feats_title), featName))
         }
-        val recyclerView = findViewById(R.id.featsList) as RecyclerView
+        list = findViewById(R.id.featsList) as RecyclerView
         val executor = Executors.newSingleThreadExecutor()
-        val adapter = FeatListAdapter(this)
-        adapter.setExecutor(executor)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter.queryAsync()
+        adapter = FeatListAdapter(this)
+        adapter?.setExecutor(executor)
+        list?.adapter = adapter
+        list?.layoutManager = LinearLayoutManager(this)
+        if(!isSearchRequestSubmitted())
+            adapter?.queryAsync()
     }
 
     private fun getParametersFromIntent() {
@@ -92,5 +127,19 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
         val name = intent.getStringExtra(FEAT_NAME)
         if(name != null)
             featName = name
+        invalidateOptionsMenu()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if(!parentMode && !childMode && searchQuery.isEmpty())
+            menuInflater.inflate(R.menu.search_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item?.itemId == R.id.search) {
+            onSearchRequested()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

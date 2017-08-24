@@ -21,7 +21,10 @@ import io.requery.reactivex.ReactiveResult
  */
 class FeatListAdapter(handler: FeatListHandler) :
         QueryRecyclerAdapter<Feat, FeatListItemHolder>(Models.DEFAULT, Feat::class.java) {
+
+    private var searchQuery : String = ""
     val featListHandler: FeatListHandler = handler
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): FeatListItemHolder {
         val inflater = LayoutInflater.from(parent?.context)
         val view = inflater.inflate(R.layout.item_feat_list, parent, false)
@@ -32,26 +35,48 @@ class FeatListAdapter(handler: FeatListHandler) :
         return holder
     }
 
+    fun performSearch(query : String) {
+        searchQuery = query
+        if(searchQuery.isNotEmpty()) {
+            queryAsync()
+        }
+    }
+
     override fun onBindViewHolder(item: Feat, holder: FeatListItemHolder?, position: Int) {
         FeatListItemHolder.bind(holder, item, featListHandler)
     }
 
     override fun performQuery(): Result<Feat> {
         val mythic = "Mythic"
+        if(searchQuery.isNotEmpty()) {
+            val result = MainApp.instance?.dataStore?.select(Feat::class)
+                    ?.where(Feat::name.like("%$searchQuery%"))
+                    ?.get() as Result<Feat>
+            if(result.count() == 0)
+                featListHandler.onEmptyResult()
+            searchQuery = ""
+            return result
+        }
         if(featListHandler.isChildMode()) {
             val result = MainApp.instance?.dataStore?.select(Feat::class)
                     ?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
             if(result.count() > 0) {
                 if(result.first().type == mythic) {
-                    return MainApp.instance?.dataStore?.select(Feat::class)
+                    val query = MainApp.instance?.dataStore?.select(Feat::class)
                             ?.where(Feat::prerequisite_feats.like(result.first().name)
                             .and(Feat::name.notLike(result.first().name))
                                     .and(Feat::type.like(mythic)))
                             ?.get() as Result<Feat>
+                    if(query.count() == 0)
+                        featListHandler.onEmptyResult()
+                    return query
                 } else {
-                    return MainApp.instance?.dataStore?.select(Feat::class)
+                    val query = MainApp.instance?.dataStore?.select(Feat::class)
                             ?.where(Feat::prerequisite_feats.like(result.first().name))
                             ?.get() as Result<Feat>
+                    if(query.count() == 0)
+                        featListHandler.onEmptyResult()
+                    return query
                 }
             } else {
                 return emptyResult()
@@ -66,9 +91,12 @@ class FeatListAdapter(handler: FeatListHandler) :
                 for (listElement : String in namesList) {
                     filtered.add(listElement.replace(Regex("\\(.*\\)"), "").trim())
                 }
-                return MainApp.instance?.dataStore?.select(Feat::class)
+                val query = MainApp.instance?.dataStore?.select(Feat::class)
                         ?.where(Feat::name.`in`(filtered).and(Feat::type.notLike(mythic)))
                         ?.get() as Result<Feat>
+                if(query.count() == 0)
+                    featListHandler.onEmptyResult()
+                return query
             } else {
                 return emptyResult()
             }
@@ -77,8 +105,10 @@ class FeatListAdapter(handler: FeatListHandler) :
                 ?.get() as Result<Feat>
     }
 
-    private fun emptyResult(): Result<Feat> =
-            MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(-1))
-                    ?.get() as Result<Feat> //TODO: return empty result explicitly
+    private fun emptyResult(): Result<Feat> {
+        featListHandler.onEmptyResult()
+        return MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(-1))
+                ?.get() as Result<Feat> //TODO: return empty result explicitly
+    }
 
 }

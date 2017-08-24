@@ -38,4 +38,7 @@
     <string name="complete_title"><![CDATA[<b>Completeon benefit:</b> %s]]></string>
     <string name="traits_title"><![CDATA[<b>Suggested traits:</b> %s]]></string>
     <string name="skills_title"><![CDATA[<b>Prerequisite skills:</b> %s]]></string>
+    <string name="search_hint">Search feats</string>
+    <string name="search">search</string>
+    <string name="no_results">no such feats found</string>
 </resources>
