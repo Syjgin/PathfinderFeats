@@ -1,16 +1,15 @@
 package com.syjgin.pathfinderfeats.activities
 
 import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.adapters.FeatListAdapter
 import com.syjgin.pathfinderfeats.interfaces.FeatListHandler
@@ -131,8 +130,13 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if(!parentMode && !childMode && searchQuery.isEmpty())
+        if(!parentMode && !childMode && searchQuery.isEmpty()) {
             menuInflater.inflate(R.menu.search_menu, menu)
+            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            val searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
+            searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            return true
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
