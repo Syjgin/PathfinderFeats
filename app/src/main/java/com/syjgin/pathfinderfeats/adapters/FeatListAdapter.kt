@@ -51,6 +51,7 @@ class FeatListAdapter(handler: FeatListHandler) :
         if(searchQuery.isNotEmpty()) {
             val result = MainApp.instance?.dataStore?.select(Feat::class)
                     ?.where(Feat::name.like("%$searchQuery%"))
+                    ?.orderBy(Feat::name.asc())
                     ?.get() as Result<Feat>
             if(result.count() == 0)
                 featListHandler.onEmptyResult()
@@ -66,13 +67,18 @@ class FeatListAdapter(handler: FeatListHandler) :
                             ?.where(Feat::prerequisite_feats.like(result.first().name)
                             .and(Feat::name.notLike(result.first().name))
                                     .and(Feat::type.like(mythic)))
+                            ?.orderBy(Feat::name.asc())
                             ?.get() as Result<Feat>
                     if(query.count() == 0)
                         featListHandler.onEmptyResult()
                     return query
                 } else {
+                    val name2find = result.first().name
                     val query = MainApp.instance?.dataStore?.select(Feat::class)
-                            ?.where(Feat::prerequisite_feats.like(result.first().name))
+                            ?.where(Feat::prerequisite_feats.like("%, $name2find%")
+                                    .or(Feat::prerequisite_feats.like("%$name2find,%"))
+                                    .or(Feat::prerequisite_feats.eq(name2find)))
+                            ?.orderBy(Feat::name.asc())
                             ?.get() as Result<Feat>
                     if(query.count() == 0)
                         featListHandler.onEmptyResult()
@@ -93,6 +99,7 @@ class FeatListAdapter(handler: FeatListHandler) :
                 }
                 val query = MainApp.instance?.dataStore?.select(Feat::class)
                         ?.where(Feat::name.`in`(filtered).and(Feat::type.notLike(mythic)))
+                        ?.orderBy(Feat::name.asc())
                         ?.get() as Result<Feat>
                 if(query.count() == 0)
                     featListHandler.onEmptyResult()

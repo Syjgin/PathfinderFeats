@@ -11,3 +11,5 @@ build/intermediates/dex-cache/
 
 build/kotlin-build/caches/
 local.properties
+
+*.properties

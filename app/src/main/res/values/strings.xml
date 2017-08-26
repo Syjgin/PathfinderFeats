@@ -41,4 +41,5 @@
     <string name="search_hint">Search feats</string>
     <string name="search">search</string>
     <string name="no_results">no such feats found</string>
+    <string name="filter">Filter</string>
 </resources>
