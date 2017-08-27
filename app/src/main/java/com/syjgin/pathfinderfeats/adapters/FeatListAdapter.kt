@@ -53,8 +53,7 @@ class FeatListAdapter(handler: FeatListHandler) :
                     ?.where(Feat::name.like("%$searchQuery%"))
                     ?.orderBy(Feat::name.asc())
                     ?.get() as Result<Feat>
-            if(result.count() == 0)
-                featListHandler.onEmptyResult()
+            featListHandler.onResult(result.count() == 0)
             searchQuery = ""
             return result
         }
@@ -69,8 +68,7 @@ class FeatListAdapter(handler: FeatListHandler) :
                                     .and(Feat::type.like(mythic)))
                             ?.orderBy(Feat::name.asc())
                             ?.get() as Result<Feat>
-                    if(query.count() == 0)
-                        featListHandler.onEmptyResult()
+                    featListHandler.onResult(query.count() == 0)
                     return query
                 } else {
                     val name2find = result.first().name
@@ -80,8 +78,7 @@ class FeatListAdapter(handler: FeatListHandler) :
                                     .or(Feat::prerequisite_feats.eq(name2find)))
                             ?.orderBy(Feat::name.asc())
                             ?.get() as Result<Feat>
-                    if(query.count() == 0)
-                        featListHandler.onEmptyResult()
+                    featListHandler.onResult(query.count() == 0)
                     return query
                 }
             } else {
@@ -101,19 +98,19 @@ class FeatListAdapter(handler: FeatListHandler) :
                         ?.where(Feat::name.`in`(filtered).and(Feat::type.notLike(mythic)))
                         ?.orderBy(Feat::name.asc())
                         ?.get() as Result<Feat>
-                if(query.count() == 0)
-                    featListHandler.onEmptyResult()
+                featListHandler.onResult(query.count() == 0)
                 return query
             } else {
                 return emptyResult()
             }
         }
+        featListHandler.onResult(false)
         return MainApp.instance?.dataStore?.select(Feat::class)?.orderBy(Feat::name.asc())
                 ?.get() as Result<Feat>
     }
 
     private fun emptyResult(): Result<Feat> {
-        featListHandler.onEmptyResult()
+        featListHandler.onResult(true)
         return MainApp.instance?.dataStore?.select(Feat::class)?.where(Feat::id.eq(-1))
                 ?.get() as Result<Feat> //TODO: return empty result explicitly
     }

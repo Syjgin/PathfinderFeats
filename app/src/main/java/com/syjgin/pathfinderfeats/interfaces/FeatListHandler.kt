@@ -12,5 +12,5 @@ interface FeatListHandler {
     fun isParentMode() : Boolean
     fun isChildMode() : Boolean
     fun featId() : Int?
-    fun onEmptyResult()
+    fun onResult(isEmpty : Boolean)
 }

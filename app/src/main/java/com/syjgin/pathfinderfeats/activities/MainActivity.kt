@@ -4,6 +4,8 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
@@ -14,9 +16,10 @@ import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.adapters.FeatListAdapter
 import com.syjgin.pathfinderfeats.interfaces.FeatListHandler
 import com.syjgin.pathfinderfeats.model.Feat
+import java.util.*
 import java.util.concurrent.Executors
 
-class MainActivity : BackButtonActivity(), FeatListHandler {
+class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTextListener {
 
     private var adapter: FeatListAdapter? = null
 
@@ -26,6 +29,8 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
     private var childMode = false
     override fun isChildMode(): Boolean = childMode
 
+    private var searchMode = false
+
     private var featId : Int? = null
     override fun featId(): Int? = featId
 
@@ -33,7 +38,23 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
 
     private var list : RecyclerView? = null
 
-    private var searchQuery : String = ""
+    private var searchView : SearchView? = null
+
+    private val intentQueue : LinkedList<Intent> = LinkedList()
+
+    var notFoundCaption : View? = null
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        searchView?.setQuery("", false);
+        searchView?.clearFocus();
+        searchView?.isIconified = true;
+        return false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        return true
+    }
+
 
     override fun openChildFeat(feat: Feat) {
         val intent = Intent(this, MainActivity::class.java)
@@ -45,10 +66,17 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
         startActivity(intent)
     }
 
-    override fun onEmptyResult() {
-        val notFoundCaption = findViewById(R.id.noResults)
-        notFoundCaption.visibility = View.VISIBLE
-        list?.visibility = View.GONE
+    override fun onResult(isEmpty : Boolean) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.post {
+            if(isEmpty) {
+                notFoundCaption?.visibility = View.VISIBLE
+                list?.visibility = View.GONE
+            } else {
+                notFoundCaption?.visibility = View.GONE
+                list?.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun openParentFeat(feat: Feat) {
@@ -69,22 +97,16 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
         startActivity(intent)
     }
 
-    private fun isSearchRequestSubmitted() : Boolean {
+    private fun performSearchRequest() {
         if(intent.action == null)
-            return false
+            return
         if(intent.action == Intent.ACTION_SEARCH) {
-            searchQuery = intent.getStringExtra(SearchManager.QUERY)
+            val searchQuery = intent.getStringExtra(SearchManager.QUERY)
             if(searchQuery.isNotEmpty()) {
-                displayBackButton()
-                title = searchQuery
                 adapter?.performSearch(searchQuery)
-                return true
-            } else {
-                finish()
-                return false
+                return
             }
         }
-        return false
     }
 
     companion object {
@@ -97,44 +119,52 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         createToolbar()
-        getParametersFromIntent()
-        if(parentMode || childMode) {
-            displayBackButton()
-        }
-        if(parentMode) {
-            setTitle(String.format(getString(R.string.parent_feats_title), featName))
-        }
-        if(childMode) {
-            setTitle(String.format(getString(R.string.child_feats_title), featName))
-        }
         list = findViewById(R.id.featsList) as RecyclerView
+        notFoundCaption = findViewById(R.id.noResults)
         val executor = Executors.newSingleThreadExecutor()
         adapter = FeatListAdapter(this)
         adapter?.setExecutor(executor)
         list?.adapter = adapter
         list?.layoutManager = LinearLayoutManager(this)
-        if(!isSearchRequestSubmitted())
-            adapter?.queryAsync()
+        intentQueue.push(Intent())
+        getParametersFromIntent()
     }
 
     private fun getParametersFromIntent() {
         val featIdFromIntent = intent.getIntExtra(FEAT_ID, -1)
         if(featIdFromIntent >= 0)
             featId = featIdFromIntent
+        searchMode = intent.action == Intent.ACTION_SEARCH
         parentMode = intent.getBooleanExtra(PARENT_MODE, false)
         childMode = intent.getBooleanExtra(CHILD_MODE, false)
         val name = intent.getStringExtra(FEAT_NAME)
         if(name != null)
             featName = name
         invalidateOptionsMenu()
+        if(parentMode || childMode || searchMode) {
+            displayBackButton()
+        } else {
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
+        if(parentMode) {
+            title = String.format(getString(R.string.parent_feats_title), featName)
+        } else if(childMode) {
+            title = String.format(getString(R.string.child_feats_title), featName)
+        } else if(searchMode) {
+            title = searchView?.query
+        } else {
+            title = getString(R.string.title_activity_main)
+        }
+        adapter?.queryAsync()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if(!parentMode && !childMode && searchQuery.isEmpty()) {
+        if(!parentMode && !childMode) {
             menuInflater.inflate(R.menu.search_menu, menu)
             val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            val searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
+            searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
             searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            searchView?.setOnQueryTextListener(this)
             return true
         }
         return super.onCreateOptionsMenu(menu)
@@ -145,5 +175,30 @@ class MainActivity : BackButtonActivity(), FeatListHandler {
             onSearchRequested()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        intentQueue.push(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        setIntent(intent)
+        performSearchRequest()
+        getParametersFromIntent()
+    }
+
+    override fun onBackPressed() {
+        if(intentQueue.size == 0)
+            super.onBackPressed()
+        else {
+            intentQueue.pop()
+            if(intentQueue.size == 0) {
+                super.onBackPressed()
+                return
+            }
+            val previousIntent = intentQueue.first()
+            handleIntent(previousIntent)
+        }
     }
 }
