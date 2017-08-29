@@ -44,4 +44,5 @@
     <string name="filter">Filter</string>
     <string name="title_activity_filters">Filters</string>
     <string name="source">Source</string>
+    <string name="title_activity_filter_values">Select value</string>
 </resources>

@@ -9,13 +9,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
+import com.syjgin.pathfinderfeats.activities.FiltersActivity
 import com.syjgin.pathfinderfeats.app.MainApp
 import com.syjgin.pathfinderfeats.holders.*
 
 /**
  * Created by user1 on 27.08.17.
  */
-class FiltersListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val children = listOf<Int>(0,1)
     val checkedList = mutableListOf<String>()
@@ -58,7 +59,7 @@ class FiltersListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             FilterCheckboxHolder.bind(holder, checkboxElement, this)
         }
         if(holder is FilterChildHolder) {
-            FilterChildHolder.bind(holder, childElement)
+            FilterChildHolder.bind(holder, childElement, activity)
         }
     }
 

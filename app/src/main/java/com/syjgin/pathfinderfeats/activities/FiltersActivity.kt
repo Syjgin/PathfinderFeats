@@ -23,7 +23,7 @@ class FiltersActivity : BackButtonActivity() {
         displayBackButton()
         val filterList = findViewById(R.id.filterList) as RecyclerView
         filterList.layoutManager = LinearLayoutManager(this)
-        adapter = FiltersListAdapter()
+        adapter = FiltersListAdapter(this)
         filterList.adapter = adapter
     }
 

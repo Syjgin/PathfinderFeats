@@ -32,7 +32,10 @@
         <activity
             android:name=".activities.FiltersActivity"
             android:label="@string/title_activity_filters"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.FilterValuesActivity"
+            android:label="@string/title_activity_filter_values"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
