@@ -174,6 +174,10 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
         if(item?.itemId == R.id.search) {
             onSearchRequested()
         }
+        if(item?.itemId == R.id.filter) {
+            val intent = Intent(this, FiltersActivity::class.java)
+            startActivity(intent)
+        }
         return super.onOptionsItemSelected(item)
     }
 

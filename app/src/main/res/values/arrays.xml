@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="filter_boolean_values">
+        <item>Teamwork</item>
+        <item>Critical</item>
+        <item>Grit</item>
+        <item>Style</item>
+        <item>Performance</item>
+        <item>Companion familiar</item>
+        <item>Multiples</item>
+        <item>Panache</item>
+        <item>Betrayal</item>
+        <item>Targeting</item>
+        <item>Esoteric</item>
+        <item>Stare</item>
+        <item>Weapon mastery</item>
+        <item>Item mastery</item>
+        <item>Armor mastery</item>
+        <item>Shield mastery</item>
+        <item>Blood Hex</item>
+        <item>Trick</item>
+    </string-array>
+    <string-array name="filter_string_values">
+        <item>Source</item>
+        <item>Race</item>
+    </string-array>
+</resources>

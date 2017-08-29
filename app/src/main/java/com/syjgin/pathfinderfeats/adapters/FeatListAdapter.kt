@@ -105,6 +105,7 @@ class FeatListAdapter(handler: FeatListHandler) :
             }
         }
         featListHandler.onResult(false)
+        //val result0 = MainApp.instance?.dataStore?.select(Feat::source)?.distinct()?.orderBy(Feat::source.asc())?.get()
         return MainApp.instance?.dataStore?.select(Feat::class)?.orderBy(Feat::name.asc())
                 ?.get() as Result<Feat>
     }

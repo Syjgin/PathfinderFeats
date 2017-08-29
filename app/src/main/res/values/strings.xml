@@ -42,4 +42,6 @@
     <string name="search">search</string>
     <string name="no_results">no such feats found</string>
     <string name="filter">Filter</string>
+    <string name="title_activity_filters">Filters</string>
+    <string name="source">Source</string>
 </resources>
