@@ -22,6 +22,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
     val checkedList = mutableListOf<String>()
     var selectedSource : String = ""
     var selectedRace : String = ""
+    var selectedSkill : String = ""
 
     enum class CellType(val num : Int) {
         Child(0),
@@ -57,6 +58,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
             val condition = when(mode) {
                 FilterValuesActivity.ValueMode.SOURCE -> selectedSource.isEmpty()
                 FilterValuesActivity.ValueMode.RACE -> selectedRace.isEmpty()
+                FilterValuesActivity.ValueMode.SKILLS -> selectedSkill.isEmpty()
                 else -> {
                     true
                 }
@@ -67,6 +69,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
                 val baseString = when(mode) {
                     FilterValuesActivity.ValueMode.SOURCE -> MainApp.instance?.applicationContext?.resources?.getString(R.string.source_title)
                     FilterValuesActivity.ValueMode.RACE -> MainApp.instance?.applicationContext?.resources?.getString(R.string.race_title)
+                    FilterValuesActivity.ValueMode.SKILLS -> MainApp.instance?.applicationContext?.resources?.getString(R.string.skills_title)
                     else -> {
                         ""
                     }
@@ -74,6 +77,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
                 val selectedString = when(mode) {
                     FilterValuesActivity.ValueMode.SOURCE -> selectedSource
                     FilterValuesActivity.ValueMode.RACE -> selectedRace
+                    FilterValuesActivity.ValueMode.SKILLS -> selectedSkill
                     else -> {
                         ""
                     }
@@ -94,12 +98,16 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
     private fun modeByPosition(position: Int) : FilterValuesActivity.ValueMode? = when(position) {
         0 -> FilterValuesActivity.ValueMode.SOURCE
         1 -> FilterValuesActivity.ValueMode.RACE
+        2 -> FilterValuesActivity.ValueMode.SKILLS
         else -> {
             null
         }
     }
 
-    override fun getItemCount(): Int = 20
+    override fun getItemCount(): Int = MainApp.instance?.applicationContext?.resources
+            ?.getStringArray(R.array.filter_boolean_values)?.size
+            ?.plus(MainApp.instance?.applicationContext?.resources
+                    ?.getStringArray(R.array.filter_string_values)!!.size)!!
 
     override fun getItemViewType(position: Int): Int {
         if(position < FilterValuesActivity.ValueMode.values().size)
@@ -125,6 +133,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
             when(mode) {
                 FilterValuesActivity.ValueMode.SOURCE -> selectedSource = selected
                 FilterValuesActivity.ValueMode.RACE -> selectedRace = selected
+                FilterValuesActivity.ValueMode.SKILLS -> selectedSkill = selected
             }
             notifyDataSetChanged()
         }
@@ -133,6 +142,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
     fun clear() {
         selectedSource = ""
         selectedRace = ""
+        selectedSkill = ""
         checkedList.clear()
         notifyDataSetChanged()
     }

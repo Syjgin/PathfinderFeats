@@ -1,31 +1,30 @@
 package com.syjgin.pathfinderfeats.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
+import com.syjgin.pathfinderfeats.activities.MainActivity
 import com.syjgin.pathfinderfeats.app.MainApp
 import com.syjgin.pathfinderfeats.holders.FeatListItemHolder
-import com.syjgin.pathfinderfeats.interfaces.FeatListHandler
 import com.syjgin.pathfinderfeats.model.Feat
 import com.syjgin.pathfinderfeats.model.Models
 import io.requery.android.QueryRecyclerAdapter
 import io.requery.kotlin.*
 import io.requery.query.Result
-import io.requery.reactivex.ReactiveResult
 
 /**
  * Created by maksimovoleg on 17/08/2017.
  */
-class FeatListAdapter(handler: FeatListHandler) :
+class FeatListAdapter(handler: MainActivity) :
         QueryRecyclerAdapter<Feat, FeatListItemHolder>(Models.DEFAULT, Feat::class.java) {
 
     private var searchQuery : String = ""
-    val featListHandler: FeatListHandler = handler
+    val featListHandler = handler
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): FeatListItemHolder {
+        featListHandler.dismissProgressbar()
         val inflater = LayoutInflater.from(parent?.context)
         val view = inflater.inflate(R.layout.item_feat_list, parent, false)
         val holder = FeatListItemHolder(view)

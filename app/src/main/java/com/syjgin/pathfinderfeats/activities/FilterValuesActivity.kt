@@ -11,7 +11,8 @@ class FilterValuesActivity : BackButtonActivity() {
 
     enum class ValueMode {
         SOURCE,
-        RACE
+        RACE,
+        SKILLS
     }
 
     companion object {

@@ -12,27 +12,27 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.adapters.FeatListAdapter
-import com.syjgin.pathfinderfeats.interfaces.FeatListHandler
 import com.syjgin.pathfinderfeats.model.Feat
 import java.util.*
 import java.util.concurrent.Executors
 
-class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTextListener {
+class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
 
     private var adapter: FeatListAdapter? = null
 
     private var parentMode = false
-    override fun isParentMode(): Boolean = parentMode
+    fun isParentMode(): Boolean = parentMode
 
     private var childMode = false
-    override fun isChildMode(): Boolean = childMode
+    fun isChildMode(): Boolean = childMode
 
     private var searchMode = false
 
     private var featId : Int? = null
-    override fun featId(): Int? = featId
+    fun featId(): Int? = featId
 
     private var featName : String = ""
 
@@ -42,7 +42,9 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
 
     private val intentQueue : LinkedList<Intent> = LinkedList()
 
-    var notFoundCaption : View? = null
+    private var notFoundCaption : View? = null
+
+    private var progressBar: ProgressBar? = null
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         searchView?.setQuery("", false);
@@ -51,12 +53,10 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
         return false
     }
 
-    override fun onQueryTextChange(newText: String?): Boolean {
-        return true
-    }
+    override fun onQueryTextChange(newText: String?): Boolean = true
 
 
-    override fun openChildFeat(feat: Feat) {
+    fun openChildFeat(feat: Feat) {
         val intent = Intent(this, MainActivity::class.java)
         val bundle = Bundle()
         bundle.putBoolean(MainActivity.CHILD_MODE, true)
@@ -66,12 +66,13 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
         startActivity(intent)
     }
 
-    override fun onResult(isEmpty : Boolean) {
+    fun onResult(isEmpty : Boolean) {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             if(isEmpty) {
                 notFoundCaption?.visibility = View.VISIBLE
                 list?.visibility = View.GONE
+                progressBar?.visibility = View.GONE
             } else {
                 notFoundCaption?.visibility = View.GONE
                 list?.visibility = View.VISIBLE
@@ -79,7 +80,7 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
         }
     }
 
-    override fun openParentFeat(feat: Feat) {
+    fun openParentFeat(feat: Feat) {
         val intent = Intent(this, MainActivity::class.java)
         val bundle = Bundle()
         bundle.putBoolean(MainActivity.PARENT_MODE, true)
@@ -89,7 +90,7 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
         startActivity(intent)
     }
 
-    override fun openFeatDetails(feat: Feat) {
+    fun openFeatDetails(feat: Feat) {
         val intent = Intent(this, FeatDetailsActivity::class.java)
         val bundle = Bundle()
         bundle.putSerializable(FeatDetailsActivity.FEAT, feat)
@@ -122,6 +123,7 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
         createToolbar()
         list = findViewById(R.id.featsList) as RecyclerView
         notFoundCaption = findViewById(R.id.noResults)
+        progressBar = findViewById(R.id.progressBar) as ProgressBar
         val executor = Executors.newSingleThreadExecutor()
         adapter = FeatListAdapter(this)
         adapter?.setExecutor(executor)
@@ -204,5 +206,9 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
             val previousIntent = intentQueue.first()
             handleIntent(previousIntent)
         }
+    }
+
+    fun dismissProgressbar() {
+        progressBar?.visibility = View.GONE
     }
 }

@@ -23,5 +23,6 @@
     <string-array name="filter_string_values">
         <item>Source</item>
         <item>Race</item>
+        <item>Skill</item>
     </string-array>
 </resources>

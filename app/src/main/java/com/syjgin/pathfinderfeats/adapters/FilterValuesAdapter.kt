@@ -24,16 +24,32 @@ class FilterValuesAdapter(private var sourceMode: FilterValuesActivity.ValueMode
         val result = when(sourceMode) {
             FilterValuesActivity.ValueMode.SOURCE -> MainApp.instance?.dataStore?.select(Feat::source)?.distinct()?.orderBy(Feat::source.asc())?.get()
             FilterValuesActivity.ValueMode.RACE -> MainApp.instance?.dataStore?.select(Feat::race_name)?.distinct()?.orderBy(Feat::race_name.asc())?.get()
+            FilterValuesActivity.ValueMode.SKILLS -> MainApp.instance?.dataStore?.select(Feat::prerequisite_skills)?.distinct()?.get()
         }
         val key = when(sourceMode) {
             FilterValuesActivity.ValueMode.SOURCE -> "source"
             FilterValuesActivity.ValueMode.RACE -> "race_name"
+            FilterValuesActivity.ValueMode.SKILLS -> "prerequisite_skills"
         }
         result?.each {
             val value : String? = it.get(key)
-            if(value != null)
-                data.add(value)
+            if(value != null) {
+                if(sourceMode != FilterValuesActivity.ValueMode.SKILLS)
+                    data.add(value)
+                else {
+                    val splitted = value.split(", ", "|", " | ")
+                    splitted.forEach {
+                        var filtered = it.replace(Regex("\\(.*\\)"), "").trim()
+                        filtered = filtered.replace(Regex("([0-9@])"), "").trim()
+                        filtered = filtered.replace("ranks", "").trim()
+                        filtered = filtered.replace("rank", "").trim()
+                        if(!data.contains(filtered))
+                            data.add(filtered)
+                    }
+                }
+            }
         }
+        data.sort()
         notifyDataSetChanged()
     }
 
