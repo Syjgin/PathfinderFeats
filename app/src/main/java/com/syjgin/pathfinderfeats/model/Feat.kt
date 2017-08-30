@@ -60,7 +60,7 @@ interface Feat : Parcelable, Persistable, Serializable {
 
     var completion_benefit : String
 
-    var Multiples : Boolean
+    var multiples: Boolean
 
     var suggested_traits : String
 

@@ -13,6 +13,7 @@ import com.syjgin.pathfinderfeats.activities.FilterValuesActivity
 import com.syjgin.pathfinderfeats.activities.FiltersActivity
 import com.syjgin.pathfinderfeats.app.MainApp
 import com.syjgin.pathfinderfeats.holders.*
+import com.syjgin.pathfinderfeats.model.BooleanFilter
 
 /**
  * Created by user1 on 27.08.17.
@@ -20,8 +21,18 @@ import com.syjgin.pathfinderfeats.holders.*
 class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val checkedList = mutableListOf<String>()
-    var selectedSource : String = ""
-    var selectedRace : String = ""
+    private var _selectedSource: String = ""
+    var selectedSource : String
+        get() = _selectedSource
+        private set(value) {
+            _selectedSource = value
+        }
+    private var _selectedRace: String = ""
+    var selectedRace : String
+        get() = _selectedRace
+        set(value) {
+            _selectedRace = value
+        }
     var selectedSkill : String = ""
 
     enum class CellType(val num : Int) {
@@ -145,5 +156,37 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
         selectedSkill = ""
         checkedList.clear()
         notifyDataSetChanged()
+    }
+
+    fun getBooleanFilter() : BooleanFilter {
+        val filter = BooleanFilter()
+        var i = 0;
+        while (i < MainApp.instance?.applicationContext?.resources?.getStringArray(R.array.filter_boolean_values)!!.size) {
+            val text = MainApp.instance?.applicationContext?.resources?.getStringArray(R.array.filter_boolean_values)?.get(i)
+            if(checkedList.contains(text)) {
+                when(i) {
+                    0 -> filter.teamwork = true
+                    1 -> filter.critical = true
+                    2 -> filter.grit = true
+                    3 -> filter.style = true
+                    4 -> filter.performance = true
+                    5 -> filter.companion_familiar = true
+                    6 -> filter.multiples = true
+                    7 -> filter.panache = true
+                    8 -> filter.betrayal = true
+                    9 -> filter.targeting = true
+                    10 -> filter.esoteric = true
+                    11 -> filter.stare = true
+                    12 -> filter.weapon_mastery = true
+                    13 -> filter.item_mastery = true
+                    14 -> filter.armor_mastery = true
+                    15 -> filter.shield_mastery = true
+                    16 -> filter.blood_hex = true
+                    17 -> filter.trick = true
+                }
+            }
+            i++
+        }
+        return filter
     }
 }

@@ -81,7 +81,7 @@ class FeatDetailsActivity : BackButtonActivity() {
         addBooleanToBuilder(builder, feat.performance, R.string.performance)
         addBooleanToBuilder(builder, feat.racial, R.string.racial)
         addBooleanToBuilder(builder, feat.companion_familiar, R.string.companion_familiar)
-        addBooleanToBuilder(builder, feat.Multiples, R.string.multiples)
+        addBooleanToBuilder(builder, feat.multiples, R.string.multiples)
         addBooleanToBuilder(builder, feat.panache, R.string.panache)
         addBooleanToBuilder(builder, feat.betrayal, R.string.betrayal)
         addBooleanToBuilder(builder, feat.targeting, R.string.targeting)

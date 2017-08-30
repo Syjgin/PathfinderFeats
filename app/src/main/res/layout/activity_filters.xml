@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
             android:textSize="16sp"
+            android:id="@+id/apply"
             android:text="@string/apply"/>
     </LinearLayout>
 </LinearLayout>
