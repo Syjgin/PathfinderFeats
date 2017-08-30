@@ -75,6 +75,10 @@ class FeatListAdapter(handler: FeatListHandler) :
                     val query = MainApp.instance?.dataStore?.select(Feat::class)
                             ?.where(Feat::prerequisite_feats.like("%, $name2find%")
                                     .or(Feat::prerequisite_feats.like("%$name2find,%"))
+                                    .or(Feat::prerequisite_feats.like("%$name2find|%"))
+                                    .or(Feat::prerequisite_feats.like("%|$name2find%"))
+                                    .or(Feat::prerequisite_feats.like("%$name2find | %"))
+                                    .or(Feat::prerequisite_feats.like("% | $name2find%"))
                                     .or(Feat::prerequisite_feats.eq(name2find)))
                             ?.orderBy(Feat::name.asc())
                             ?.get() as Result<Feat>
@@ -89,7 +93,7 @@ class FeatListAdapter(handler: FeatListHandler) :
             val result = MainApp.instance?.dataStore?.select(Feat::class)
                     ?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
             if(result.count() > 0) {
-                val namesList = result.first().prerequisite_feats.split(", ")
+                val namesList = result.first().prerequisite_feats.split(", ", "|", " | ")
                 val filtered = mutableListOf<String>()
                 for (listElement : String in namesList) {
                     filtered.add(listElement.replace(Regex("\\(.*\\)"), "").trim())

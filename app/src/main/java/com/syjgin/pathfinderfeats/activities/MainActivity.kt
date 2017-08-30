@@ -103,6 +103,7 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
         if(intent.action == Intent.ACTION_SEARCH) {
             val searchQuery = intent.getStringExtra(SearchManager.QUERY)
             if(searchQuery.isNotEmpty()) {
+                title = searchQuery
                 adapter?.performSearch(searchQuery)
                 return
             }
@@ -150,16 +151,15 @@ class MainActivity : BackButtonActivity(), FeatListHandler, SearchView.OnQueryTe
             title = String.format(getString(R.string.parent_feats_title), featName)
         } else if(childMode) {
             title = String.format(getString(R.string.child_feats_title), featName)
-        } else if(searchMode) {
-            title = searchView?.query
-        } else {
+        } else if(!searchMode){
             title = getString(R.string.title_activity_main)
         }
-        adapter?.queryAsync()
+        if(!searchMode)
+            adapter?.queryAsync()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if(!parentMode && !childMode) {
+        if(!parentMode && !childMode && !searchMode) {
             menuInflater.inflate(R.menu.search_menu, menu)
             val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
