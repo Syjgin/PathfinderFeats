@@ -20,6 +20,8 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
 
     val children = listOf<Int>(0,1)
     val checkedList = mutableListOf<String>()
+    var selectedSource : String = ""
+    var selectedRace : String = ""
 
     enum class CellType(val num : Int) {
         Child(0),
@@ -51,7 +53,14 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
         var childElement = ""
         var checkboxElement = ""
         if(position in children) {
-            childElement = MainApp.instance?.applicationContext?.resources?.getStringArray(R.array.filter_string_values)?.get(position).toString()
+            val condition = if(position == 0) selectedSource.isEmpty() else selectedRace.isEmpty()
+            if(condition)
+                childElement = MainApp.instance?.applicationContext?.resources?.getStringArray(R.array.filter_string_values)?.get(position).toString()
+            else {
+                val baseString = if(position == 0) MainApp.instance?.applicationContext?.resources?.getString(R.string.source_title) else MainApp.instance?.applicationContext?.resources?.getString(R.string.race_title)
+                val selectedString = if(position == 0) selectedSource else selectedRace
+                childElement = String.format(baseString as String, selectedString)
+            }
         } else {
             checkboxElement = MainApp.instance?.applicationContext?.resources?.getStringArray(R.array.filter_boolean_values)?.get(position -2).toString()
         }
@@ -59,7 +68,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
             FilterCheckboxHolder.bind(holder, checkboxElement, this)
         }
         if(holder is FilterChildHolder) {
-            FilterChildHolder.bind(holder, childElement, activity)
+            FilterChildHolder.bind(holder, childElement, activity, position == 0)
         }
     }
 
@@ -84,4 +93,21 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
     }
 
     public fun isElementChecked(checkboxElement: String) = checkedList.contains(checkboxElement)
+    fun updateValue(source: Boolean?, selected: String?) {
+        if(source != null && selected != null) {
+            if(source) {
+                selectedSource = selected
+            } else {
+                selectedRace = selected
+            }
+            notifyDataSetChanged()
+        }
+    }
+
+    fun clear() {
+        selectedSource = ""
+        selectedRace = ""
+        checkedList.clear()
+        notifyDataSetChanged()
+    }
 }

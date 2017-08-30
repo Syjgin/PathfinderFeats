@@ -45,4 +45,6 @@
     <string name="title_activity_filters">Filters</string>
     <string name="source">Source</string>
     <string name="title_activity_filter_values">Select value</string>
+    <string name="clear">clear</string>
+    <string name="apply">apply</string>
 </resources>

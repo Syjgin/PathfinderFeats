@@ -1,10 +1,13 @@
 package com.syjgin.pathfinderfeats.adapters
 
+import android.app.Activity
+import android.content.Intent
 import android.support.v7.widget.AppCompatRadioButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.syjgin.pathfinderfeats.R
+import com.syjgin.pathfinderfeats.activities.FilterValuesActivity
 import com.syjgin.pathfinderfeats.app.MainApp
 import com.syjgin.pathfinderfeats.holders.FilterRadioHolder
 import com.syjgin.pathfinderfeats.model.Feat
@@ -18,7 +21,7 @@ import io.requery.query.Tuple
 /**
  * Created by user1 on 29.08.17.
  */
-class FilterValuesAdapter(private var sourceMode: Boolean) : RecyclerView.Adapter<FilterRadioHolder>() {
+class FilterValuesAdapter(private var sourceMode: Boolean, private val activity: Activity) : RecyclerView.Adapter<FilterRadioHolder>() {
     val data = mutableListOf<String>()
 
     init {
@@ -53,5 +56,10 @@ class FilterValuesAdapter(private var sourceMode: Boolean) : RecyclerView.Adapte
     public fun updateSelected(newValue : String) {
         selected = newValue
         notifyDataSetChanged()
+        val intent = Intent()
+        intent.putExtra(FilterValuesActivity.SELECTED, newValue)
+        intent.putExtra(FilterValuesActivity.SOURCE_MODE, sourceMode)
+        activity.setResult(Activity.RESULT_OK, intent)
+        activity.finish()
     }
 }
