@@ -11,24 +11,26 @@ import com.syjgin.pathfinderfeats.activities.FilterValuesActivity
 import com.syjgin.pathfinderfeats.app.MainApp
 import com.syjgin.pathfinderfeats.holders.FilterRadioHolder
 import com.syjgin.pathfinderfeats.model.Feat
-import com.syjgin.pathfinderfeats.model.Models
-import io.requery.android.QueryRecyclerAdapter
 import io.requery.kotlin.asc
 import io.requery.kotlin.select
-import io.requery.query.Result
-import io.requery.query.Tuple
 
 /**
  * Created by user1 on 29.08.17.
  */
-class FilterValuesAdapter(private var sourceMode: Boolean, private val activity: Activity) : RecyclerView.Adapter<FilterRadioHolder>() {
+class FilterValuesAdapter(private var sourceMode: FilterValuesActivity.ValueMode, private val activity: Activity) : RecyclerView.Adapter<FilterRadioHolder>() {
     val data = mutableListOf<String>()
 
     init {
-        val result = if(sourceMode) MainApp.instance?.dataStore?.select(Feat::source)?.distinct()?.orderBy(Feat::source.asc())?.get() else
-            MainApp.instance?.dataStore?.select(Feat::race_name)?.distinct()?.orderBy(Feat::race_name.asc())?.get() as Result<Tuple>
+        val result = when(sourceMode) {
+            FilterValuesActivity.ValueMode.SOURCE -> MainApp.instance?.dataStore?.select(Feat::source)?.distinct()?.orderBy(Feat::source.asc())?.get()
+            FilterValuesActivity.ValueMode.RACE -> MainApp.instance?.dataStore?.select(Feat::race_name)?.distinct()?.orderBy(Feat::race_name.asc())?.get()
+        }
+        val key = when(sourceMode) {
+            FilterValuesActivity.ValueMode.SOURCE -> "source"
+            FilterValuesActivity.ValueMode.RACE -> "race_name"
+        }
         result?.each {
-            val value : String? = it.get(if(sourceMode) "source" else "race_name")
+            val value : String? = it.get(key)
             if(value != null)
                 data.add(value)
         }
@@ -58,7 +60,7 @@ class FilterValuesAdapter(private var sourceMode: Boolean, private val activity:
         notifyDataSetChanged()
         val intent = Intent()
         intent.putExtra(FilterValuesActivity.SELECTED, newValue)
-        intent.putExtra(FilterValuesActivity.SOURCE_MODE, sourceMode)
+        intent.putExtra(FilterValuesActivity.VALUE_MODE, sourceMode)
         activity.setResult(Activity.RESULT_OK, intent)
         activity.finish()
     }

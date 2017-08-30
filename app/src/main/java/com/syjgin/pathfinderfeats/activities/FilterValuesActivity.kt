@@ -1,19 +1,21 @@
 package com.syjgin.pathfinderfeats.activities
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.syjgin.pathfinderfeats.R
-import com.syjgin.pathfinderfeats.adapters.FeatListAdapter
 import com.syjgin.pathfinderfeats.adapters.FilterValuesAdapter
-import java.util.concurrent.Executors
 
 class FilterValuesActivity : BackButtonActivity() {
     var adapter : FilterValuesAdapter? = null
 
+    enum class ValueMode {
+        SOURCE,
+        RACE
+    }
+
     companion object {
-        const val SOURCE_MODE = "SOURCE_MODE"
+        const val VALUE_MODE = "VALUE_MODE"
         const val SELECTED = "SELECTED"
         const val VALUES_REQUEST = 100
     }
@@ -25,7 +27,7 @@ class FilterValuesActivity : BackButtonActivity() {
         displayBackButton()
         val list = findViewById(R.id.list) as RecyclerView
         list.layoutManager = LinearLayoutManager(this)
-        adapter = FilterValuesAdapter(intent.getBooleanExtra(SOURCE_MODE, false), this)
+        adapter = FilterValuesAdapter(intent.getSerializableExtra(VALUE_MODE) as ValueMode, this)
         list.adapter = adapter
     }
 }

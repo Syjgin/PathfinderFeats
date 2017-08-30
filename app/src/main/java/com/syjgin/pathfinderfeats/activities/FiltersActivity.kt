@@ -3,15 +3,10 @@ package com.syjgin.pathfinderfeats.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 
 import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.adapters.FiltersListAdapter
@@ -35,9 +30,9 @@ class FiltersActivity : BackButtonActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == FilterValuesActivity.VALUES_REQUEST) {
             if(resultCode == Activity.RESULT_OK) {
-                val isSource = data?.getBooleanExtra(FilterValuesActivity.SOURCE_MODE, false)
-                val selected = data?.getStringExtra(FilterValuesActivity.SELECTED)
-                adapter?.updateValue(isSource, selected)
+                val valueMode = data?.getSerializableExtra(FilterValuesActivity.VALUE_MODE) as FilterValuesActivity.ValueMode
+                val selected = data.getStringExtra(FilterValuesActivity.SELECTED)
+                adapter?.updateValue(valueMode, selected)
             }
         }
     }
