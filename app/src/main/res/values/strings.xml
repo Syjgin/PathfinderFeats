@@ -47,4 +47,7 @@
     <string name="title_activity_filter_values">Select value</string>
     <string name="clear">clear</string>
     <string name="apply">apply</string>
+    <string name="filtered_feats">Filter results</string>
+    <string name="info">About</string>
+    <string name="close">close</string>
 </resources>

@@ -34,10 +34,11 @@ class FilterValuesAdapter(private var sourceMode: FilterValuesActivity.ValueMode
         result?.each {
             val value : String? = it.get(key)
             if(value != null) {
-                if(sourceMode != FilterValuesActivity.ValueMode.SKILLS)
-                    data.add(value)
-                else {
-                    val splitted = value.split(", ", "|", " | ")
+                if(sourceMode == FilterValuesActivity.ValueMode.SOURCE) {
+                    if(!data.contains(value))
+                        data.add(value)
+                } else {
+                    val splitted = value.toLowerCase().split(", ", "|", " | ")
                     splitted.forEach {
                         var filtered = it.replace(Regex("\\(.*\\)"), "").trim()
                         filtered = filtered.replace(Regex("([0-9@])"), "").trim()

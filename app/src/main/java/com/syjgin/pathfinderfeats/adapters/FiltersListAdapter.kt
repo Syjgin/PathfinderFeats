@@ -1,8 +1,6 @@
 package com.syjgin.pathfinderfeats.adapters
 
-import android.preference.PreferenceActivity
 import android.support.v7.widget.AppCompatCheckBox
-import android.support.v7.widget.AppCompatRadioButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,7 +11,7 @@ import com.syjgin.pathfinderfeats.activities.FilterValuesActivity
 import com.syjgin.pathfinderfeats.activities.FiltersActivity
 import com.syjgin.pathfinderfeats.app.MainApp
 import com.syjgin.pathfinderfeats.holders.*
-import com.syjgin.pathfinderfeats.model.BooleanFilter
+import com.syjgin.pathfinderfeats.model.FilterValues
 
 /**
  * Created by user1 on 27.08.17.
@@ -21,19 +19,9 @@ import com.syjgin.pathfinderfeats.model.BooleanFilter
 class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val checkedList = mutableListOf<String>()
-    private var _selectedSource: String = ""
-    var selectedSource : String
-        get() = _selectedSource
-        private set(value) {
-            _selectedSource = value
-        }
-    private var _selectedRace: String = ""
-    var selectedRace : String
-        get() = _selectedRace
-        set(value) {
-            _selectedRace = value
-        }
-    var selectedSkill : String = ""
+    private var selectedSource: String = ""
+    private var selectedRace: String = ""
+    private var selectedSkill : String = ""
 
     enum class CellType(val num : Int) {
         Child(0),
@@ -158,8 +146,8 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
         notifyDataSetChanged()
     }
 
-    fun getBooleanFilter() : BooleanFilter {
-        val filter = BooleanFilter()
+    fun getFilterValues() : FilterValues {
+        val filter = FilterValues()
         var i = 0;
         while (i < MainApp.instance?.applicationContext?.resources?.getStringArray(R.array.filter_boolean_values)!!.size) {
             val text = MainApp.instance?.applicationContext?.resources?.getStringArray(R.array.filter_boolean_values)?.get(i)
@@ -187,6 +175,9 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
             }
             i++
         }
+        filter.sourceFilter = selectedSource
+        filter.skillFilter = selectedSkill
+        filter.raceFilter = selectedRace
         return filter
     }
 }

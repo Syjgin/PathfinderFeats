@@ -15,10 +15,7 @@ import com.syjgin.pathfinderfeats.adapters.FiltersListAdapter
 class FiltersActivity : BackButtonActivity() {
 
     companion object {
-        const val SOURCE_FILTER = "SOURCE_FILTER"
-        const val RACE_FILTER = "RACE_FILTER"
-        const val SKILL_FILTER = "SKILL_FILTER"
-        const val BOOLEAN_FILTER = "BOOLEAN_FILTER"
+        const val FILTER = "FILTER"
     }
 
     var adapter : FiltersListAdapter? = null
@@ -43,13 +40,7 @@ class FiltersActivity : BackButtonActivity() {
             return
         val intent = Intent(this, MainActivity::class.java)
         val bundle = Bundle()
-        if(adapter?.selectedSource!!.isNotEmpty())
-            bundle.putString(SOURCE_FILTER, adapter?.selectedSource)
-        if(adapter?.selectedRace!!.isNotEmpty())
-            bundle.putString(RACE_FILTER, adapter?.selectedRace)
-        if(adapter?.selectedSource!!.isNotEmpty())
-            bundle.putString(SKILL_FILTER, adapter?.selectedSource)
-        bundle.putSerializable(BOOLEAN_FILTER, adapter?.getBooleanFilter())
+        bundle.putSerializable(FILTER, adapter?.getFilterValues())
         intent.putExtras(bundle)
         startActivity(intent)
     }
