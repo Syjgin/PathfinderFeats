@@ -14,6 +14,8 @@ import io.requery.android.QueryRecyclerAdapter
 import io.requery.kotlin.*
 import io.requery.query.Result
 import io.requery.reactivex.ReactiveResult
+import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KProperty1
 
 /**
  * Created by maksimovoleg on 17/08/2017.
@@ -121,145 +123,65 @@ class FeatListAdapter(handler: MainActivity) :
                     }
                     if(filterValues.raceFilter.isNotEmpty()) {
                         val raceFilter = filterValues.raceFilter
-                        if(condition == null) {
-                            condition = query?.where(Feat::race_name.like("%$raceFilter%"));
-                        } else {
-                            condition = condition.and(Feat::race_name.like("%$raceFilter%"))
-                        }
+                        condition = addStringCharacteristicToFilter(condition, query, raceFilter, Feat::race_name)
                     }
                     if(filterValues.skillFilter.isNotEmpty()) {
                         val skillFilter = filterValues.skillFilter
-                        if(condition == null) {
-                            condition = query?.where(Feat::prerequisite_skills.like("%$skillFilter%"));
-                        } else {
-                            condition = condition.and(Feat::prerequisite_skills.like("%$skillFilter%"))
-                        }
+                        condition = addStringCharacteristicToFilter(condition, query, skillFilter, Feat::prerequisite_skills)
                     }
                     if(filterValues.panache) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::panache.eq(true));
-                        } else {
-                            condition = condition.and(Feat::panache.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::panache)
                     }
                     if(filterValues.trick) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::trick.eq(true));
-                        } else {
-                            condition = condition.and(Feat::trick.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::trick)
                     }
                     if(filterValues.blood_hex) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::blood_hex.eq(true));
-                        } else {
-                            condition = condition.and(Feat::blood_hex.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::blood_hex)
                     }
                     if(filterValues.shield_mastery) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::shield_mastery.eq(true));
-                        } else {
-                            condition = condition.and(Feat::shield_mastery.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::shield_mastery)
                     }
                     if(filterValues.armor_mastery) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::armor_mastery.eq(true));
-                        } else {
-                            condition = condition.and(Feat::armor_mastery.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::armor_mastery)
                     }
                     if(filterValues.item_mastery) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::item_mastery.eq(true));
-                        } else {
-                            condition = condition.and(Feat::item_mastery.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::item_mastery)
                     }
                     if(filterValues.weapon_mastery) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::weapon_mastery.eq(true));
-                        } else {
-                            condition = condition.and(Feat::weapon_mastery.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::weapon_mastery)
                     }
                     if(filterValues.stare) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::stare.eq(true));
-                        } else {
-                            condition = condition.and(Feat::stare.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::stare)
                     }
                     if(filterValues.esoteric) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::esoteric.eq(true));
-                        } else {
-                            condition = condition.and(Feat::esoteric.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::esoteric)
                     }
                     if(filterValues.targeting) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::targeting.eq(true));
-                        } else {
-                            condition = condition.and(Feat::targeting.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::targeting)
                     }
                     if(filterValues.betrayal) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::betrayal.eq(true));
-                        } else {
-                            condition = condition.and(Feat::betrayal.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::betrayal)
                     }
                     if(filterValues.multiples) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::multiples.eq(true));
-                        } else {
-                            condition = condition.and(Feat::multiples.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::multiples)
                     }
                     if(filterValues.companion_familiar) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::companion_familiar.eq(true));
-                        } else {
-                            condition = condition.and(Feat::companion_familiar.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::companion_familiar)
                     }
                     if(filterValues.performance) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::performance.eq(true));
-                        } else {
-                            condition = condition.and(Feat::performance.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::performance)
                     }
                     if(filterValues.style) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::style.eq(true));
-                        } else {
-                            condition = condition.and(Feat::style.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::style)
                     }
                     if(filterValues.grit) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::grit.eq(true));
-                        } else {
-                            condition = condition.and(Feat::grit.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::grit)
                     }
                     if(filterValues.critical) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::critical.eq(true));
-                        } else {
-                            condition = condition.and(Feat::critical.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::critical)
                     }
                     if(filterValues.teamwork) {
-                        if(condition == null) {
-                            condition = query?.where(Feat::teamwork.eq(true));
-                        } else {
-                            condition = condition.and(Feat::teamwork.eq(true))
-                        }
+                        condition = addBooleanValueToFilter(condition, query,Feat::teamwork)
                     }
                     val result = condition?.get() as Result<Feat>
                     featListHandler.onResult(result.count() == 0)
@@ -275,6 +197,30 @@ class FeatListAdapter(handler: MainActivity) :
         featListHandler.onResult(false)
         return MainApp.instance?.dataStore?.select(Feat::class)?.orderBy(Feat::name.asc())
                 ?.get() as Result<Feat>
+    }
+
+    private fun addStringCharacteristicToFilter(condition: WhereAndOr<ReactiveResult<Feat>>?,
+                                                query: Selection<ReactiveResult<Feat>>?,
+                                                filter: String, characteristic : KMutableProperty1<Feat, String>): WhereAndOr<ReactiveResult<Feat>>? {
+        var condition1 = condition
+        if (condition1 == null) {
+            condition1 = query?.where(characteristic.like("%$filter%"));
+        } else {
+            condition1 = condition1.and(characteristic.like("%$filter%"))
+        }
+        return condition1
+    }
+
+    private fun addBooleanValueToFilter(condition: WhereAndOr<ReactiveResult<Feat>>?,
+                                        query: Selection<ReactiveResult<Feat>>?,
+                                        characteristic: KMutableProperty1<Feat, Boolean>) : WhereAndOr<ReactiveResult<Feat>>? {
+        var condition1 = condition
+        if(condition1 == null) {
+            condition1 = query?.where(characteristic.eq(true));
+        } else {
+            condition1 = condition1.and(characteristic.eq(true))
+        }
+        return condition1
     }
 
     private fun emptyResult(): Result<Feat> {
