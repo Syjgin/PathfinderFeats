@@ -15,6 +15,8 @@ import android.text.method.LinkMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewTreeObserver
+import android.widget.AbsListView
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
@@ -56,9 +58,11 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
 
     private val intentQueue : LinkedList<Intent> = LinkedList()
 
+    private val scrollValueQueue : LinkedList<Int> = LinkedList()
+    private var currentScroll = 0
 
     private var filterValues: FilterValues? = null
-    public fun filterValues() : FilterValues? = filterValues
+    fun filterValues() : FilterValues? = filterValues
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         searchView?.setQuery("", false);
@@ -137,6 +141,11 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
         list?.adapter = adapter
         list?.layoutManager = LinearLayoutManager(this)
         intentQueue.push(intent)
+        list?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                currentScroll += dy;
+            }
+        })
         getParametersFromIntent()
     }
 
@@ -152,6 +161,7 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
         if(featIdFromIntent >= 0)
             featId = featIdFromIntent
         filterValues = intent.getSerializableExtra(FiltersActivity.FILTER) as FilterValues?
+        _currentMode = OpenMode.STANDARD
         if(intent.action == Intent.ACTION_SEARCH)
             _currentMode = OpenMode.SEARCH
         if(intent.getBooleanExtra(PARENT_MODE, false))
@@ -208,6 +218,7 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
     }
 
     override fun onNewIntent(intent: Intent?) {
+        scrollValueQueue.push(currentScroll)
         intentQueue.push(intent)
         handleIntent(intent)
     }
@@ -228,6 +239,15 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
             }
             val previousIntent = intentQueue.first()
             handleIntent(previousIntent)
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                var previousValue = 0
+                if(!scrollValueQueue.isEmpty()) {
+                    previousValue = scrollValueQueue.pop()
+                }
+                currentScroll = previousValue
+                list?.scrollTo(0, previousValue)
+            }, 500)
         }
     }
 
