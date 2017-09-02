@@ -60,7 +60,6 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
     private val intentQueue : LinkedList<Intent> = LinkedList()
 
     private val scrollValueQueue : LinkedList<Int> = LinkedList()
-    private var currentScroll = 0
     private lateinit var layoutManager : LinearLayoutManager
 
     private var filterValues: FilterValues? = null
@@ -144,11 +143,6 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
         list.layoutManager = LinearLayoutManager(this)
         layoutManager = list.layoutManager as LinearLayoutManager
         intentQueue.push(intent)
-        list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                currentScroll = layoutManager.findLastVisibleItemPosition();
-            }
-        })
         getParametersFromIntent()
     }
 
@@ -221,7 +215,7 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
     }
 
     override fun onNewIntent(intent: Intent?) {
-        scrollValueQueue.push(currentScroll)
+        scrollValueQueue.push(layoutManager.findLastVisibleItemPosition())
         intentQueue.push(intent)
         handleIntent(intent)
     }
@@ -248,7 +242,6 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
                 if(!scrollValueQueue.isEmpty()) {
                     previousValue = scrollValueQueue.pop()
                 }
-                currentScroll = previousValue
                 list.scrollToPosition(previousValue)
             }, 300)
         }
