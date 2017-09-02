@@ -7,8 +7,7 @@ import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.adapters.FilterValuesAdapter
 
 class FilterValuesActivity : BackButtonActivity() {
-    var adapter : FilterValuesAdapter? = null
-
+    
     enum class ValueMode {
         SOURCE,
         RACE,
@@ -28,7 +27,7 @@ class FilterValuesActivity : BackButtonActivity() {
         displayBackButton()
         val list = findViewById(R.id.list) as RecyclerView
         list.layoutManager = LinearLayoutManager(this)
-        adapter = FilterValuesAdapter(intent.getSerializableExtra(VALUE_MODE) as ValueMode, this)
+        val adapter = FilterValuesAdapter(intent.getSerializableExtra(VALUE_MODE) as ValueMode, this)
         list.adapter = adapter
     }
 }

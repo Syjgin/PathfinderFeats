@@ -18,7 +18,7 @@ class FiltersActivity : BackButtonActivity() {
         const val FILTER = "FILTER"
     }
 
-    var adapter : FiltersListAdapter? = null
+    lateinit var adapter : FiltersListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +36,9 @@ class FiltersActivity : BackButtonActivity() {
     }
 
     private fun applyFilters() {
-        if(adapter == null)
-            return
         val intent = Intent(this, MainActivity::class.java)
         val bundle = Bundle()
-        bundle.putSerializable(FILTER, adapter?.getFilterValues())
+        bundle.putSerializable(FILTER, adapter.getFilterValues())
         intent.putExtras(bundle)
         startActivity(intent)
     }
@@ -51,7 +49,7 @@ class FiltersActivity : BackButtonActivity() {
             if(resultCode == Activity.RESULT_OK) {
                 val valueMode = data?.getSerializableExtra(FilterValuesActivity.VALUE_MODE) as FilterValuesActivity.ValueMode
                 val selected = data.getStringExtra(FilterValuesActivity.SELECTED)
-                adapter?.updateValue(valueMode, selected)
+                adapter.updateValue(valueMode, selected)
             }
         }
     }
@@ -63,7 +61,7 @@ class FiltersActivity : BackButtonActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if(item?.itemId == R.id.clear) {
-            adapter?.clear()
+            adapter.clear()
         }
         return super.onOptionsItemSelected(item)
     }

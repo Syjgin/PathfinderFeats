@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Html
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -38,7 +39,7 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
     }
 
     private var _currentMode: OpenMode = OpenMode.STANDARD
-    public var currentMode : OpenMode
+    var currentMode : OpenMode
         get() = _currentMode
         private set(value) {
             _currentMode = value
@@ -47,27 +48,28 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
     private var adapter: FeatListAdapter? = null
 
     private var featId : Int? = null
-    public fun featId(): Int? = featId
+    fun featId(): Int? = featId
 
     private var featName : String = ""
 
-    private var list : RecyclerView? = null
-    private var searchView : SearchView? = null
-    private var notFoundCaption : View? = null
-    private var progressBar: ProgressBar? = null
+    private lateinit var list : RecyclerView
+    private lateinit var searchView : SearchView
+    private lateinit var notFoundCaption : View
+    private lateinit var progressBar: ProgressBar
 
     private val intentQueue : LinkedList<Intent> = LinkedList()
 
     private val scrollValueQueue : LinkedList<Int> = LinkedList()
     private var currentScroll = 0
+    private lateinit var layoutManager : LinearLayoutManager
 
     private var filterValues: FilterValues? = null
     fun filterValues() : FilterValues? = filterValues
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        searchView?.setQuery("", false);
-        searchView?.clearFocus();
-        searchView?.isIconified = true;
+        searchView.setQuery("", false);
+        searchView.clearFocus();
+        searchView.isIconified = true;
         return false
     }
 
@@ -88,12 +90,12 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
         val handler = Handler(Looper.getMainLooper())
         handler.post {
             if(isEmpty) {
-                notFoundCaption?.visibility = View.VISIBLE
-                list?.visibility = View.GONE
-                progressBar?.visibility = View.GONE
+                notFoundCaption.visibility = View.VISIBLE
+                list.visibility = View.GONE
+                progressBar.visibility = View.GONE
             } else {
-                notFoundCaption?.visibility = View.GONE
-                list?.visibility = View.VISIBLE
+                notFoundCaption.visibility = View.GONE
+                list.visibility = View.VISIBLE
             }
         }
     }
@@ -138,12 +140,13 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
         val executor = Executors.newSingleThreadExecutor()
         adapter = FeatListAdapter(this)
         adapter?.setExecutor(executor)
-        list?.adapter = adapter
-        list?.layoutManager = LinearLayoutManager(this)
+        list.adapter = adapter
+        list.layoutManager = LinearLayoutManager(this)
+        layoutManager = list.layoutManager as LinearLayoutManager
         intentQueue.push(intent)
-        list?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                currentScroll += dy;
+                currentScroll = layoutManager.findLastVisibleItemPosition();
             }
         })
         getParametersFromIntent()
@@ -194,9 +197,9 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
         if(_currentMode == OpenMode.STANDARD) {
             menuInflater.inflate(R.menu.search_menu, menu)
             val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            searchView = menu?.findItem(R.id.search)?.actionView as SearchView?
-            searchView?.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            searchView?.setOnQueryTextListener(this)
+            searchView = menu?.findItem(R.id.search)?.actionView as SearchView
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            searchView.setOnQueryTextListener(this)
             return true
         }
         return super.onCreateOptionsMenu(menu)
@@ -246,12 +249,12 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
                     previousValue = scrollValueQueue.pop()
                 }
                 currentScroll = previousValue
-                list?.scrollTo(0, previousValue)
-            }, 500)
+                list.scrollToPosition(previousValue)
+            }, 300)
         }
     }
 
     fun dismissProgressbar() {
-        progressBar?.visibility = View.GONE
+        progressBar.visibility = View.GONE
     }
 }
