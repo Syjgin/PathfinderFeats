@@ -3,9 +3,11 @@ package com.syjgin.pathfinderfeats.persistentData
 import android.content.Context
 import android.util.Log
 import com.syjgin.pathfinderfeats.R
+import com.syjgin.pathfinderfeats.model.ProgressEvent
 import io.requery.android.database.sqlite.SQLiteDatabase
 import io.requery.android.sqlitex.SqlitexDatabaseSource
 import io.requery.meta.EntityModel
+import org.greenrobot.eventbus.EventBus
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter
@@ -49,6 +51,8 @@ class MainDatabaseSource(context: Context?, model: EntityModel?, version: Int) :
         val reader = BufferedReader(InputStreamReader(inputStream))
         var line: String?
         var end = false
+        val NUMBER_OF_LINES = 2920f
+        var currentLine = 0f
         while (!end) {
             line = reader.readLine()
             if (line == null) {
@@ -56,10 +60,13 @@ class MainDatabaseSource(context: Context?, model: EntityModel?, version: Int) :
             } else {
                 try {
                     db.execSQL(line)
+                    val percent = (currentLine / NUMBER_OF_LINES) * 100
+                    EventBus.getDefault().post(ProgressEvent(percent.toInt()))
                 } catch (e: Exception) {
                     Log.d("DB_INIT_ERROR", e.message)
                 }
             }
+            currentLine++
         }
     }
 }

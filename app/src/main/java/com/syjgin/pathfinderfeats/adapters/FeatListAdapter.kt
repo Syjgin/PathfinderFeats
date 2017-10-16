@@ -2,8 +2,6 @@ package com.syjgin.pathfinderfeats.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.activities.MainActivity
 import com.syjgin.pathfinderfeats.app.MainApp
@@ -15,7 +13,6 @@ import io.requery.kotlin.*
 import io.requery.query.Result
 import io.requery.reactivex.ReactiveResult
 import kotlin.reflect.KMutableProperty1
-import kotlin.reflect.KProperty1
 
 /**
  * Created by maksimovoleg on 17/08/2017.
@@ -31,9 +28,9 @@ class FeatListAdapter(handler: MainActivity) :
         val inflater = LayoutInflater.from(parent?.context)
         val view = inflater.inflate(R.layout.item_feat_list, parent, false)
         val holder = FeatListItemHolder(view)
-        holder.titleView = view.findViewById(R.id.featTitle) as TextView
-        holder.childIcon = view.findViewById(R.id.childFeats) as ImageView
-        holder.parentIcon = view.findViewById(R.id.parentFeats) as ImageView
+        holder.titleView = view.findViewById(R.id.featTitle)
+        holder.childIcon = view.findViewById(R.id.childFeats)
+        holder.parentIcon = view.findViewById(R.id.parentFeats)
         return holder
     }
 

@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
+import android.widget.Button
 import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.activities.MainActivity
@@ -17,13 +18,13 @@ class AboutAppDialog(context: Context) : AlertDialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.about_dialog)
-        val textView = findViewById(R.id.textView) as TextView
+        val textView = findViewById<TextView>(R.id.textView)
         textView.setText(Html.fromHtml(MainActivity.ABOUT_TEXT))
         textView.setMovementMethod(LinkMovementMethod.getInstance())
         textView.linksClickable = true
         textView.isClickable = true
         setTitle(R.id.info)
-        val close = findViewById(R.id.close)
+        val close = findViewById<Button>(R.id.close)
         close.setOnClickListener({view ->
             dismiss()
         })

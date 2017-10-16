@@ -25,11 +25,11 @@ class FiltersActivity : BackButtonActivity() {
         setContentView(R.layout.activity_filters)
         createToolbar()
         displayBackButton()
-        val filterList = findViewById(R.id.filterList) as RecyclerView
+        val filterList = findViewById<RecyclerView>(R.id.filterList)
         filterList.layoutManager = LinearLayoutManager(this)
         adapter = FiltersListAdapter(this)
         filterList.adapter = adapter
-        val apply = findViewById(R.id.apply) as Button
+        val apply = findViewById<Button>(R.id.apply)
         apply.setOnClickListener {
             applyFilters()
         }

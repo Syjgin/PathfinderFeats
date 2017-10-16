@@ -24,7 +24,7 @@ open class BackButtonActivity : AppCompatActivity() {
     }
 
     protected fun createToolbar() {
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
     }
 }

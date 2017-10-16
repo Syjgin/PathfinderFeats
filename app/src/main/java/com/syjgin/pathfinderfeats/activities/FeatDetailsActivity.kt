@@ -47,13 +47,13 @@ class FeatDetailsActivity : BackButtonActivity() {
     private fun initWithFeat(feat : Feat) {
         this.feat = feat
         title = feat.name
-        val typeText = findViewById(R.id.featType) as TextView
+        val typeText = findViewById<TextView>(R.id.featType)
         displayCharacteristic(typeText, feat.type, R.string.type_title)
-        val descriptionText = findViewById(R.id.description) as TextView
+        val descriptionText = findViewById<TextView>(R.id.description)
         descriptionText.text = feat.description
-        val prerequisitesText = findViewById(R.id.prerequisites) as TextView
+        val prerequisitesText = findViewById<TextView>(R.id.prerequisites)
         displayCharacteristic(prerequisitesText, feat.prerequisites, R.string.prerequisites_title)
-        val childFeats = findViewById(R.id.childFeats) as TextView
+        val childFeats = findViewById<TextView>(R.id.childFeats)
         displayCharacteristic(childFeats, feat.prerequisite_feats, R.string.prerequisite_feats)
         childFeats.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -64,15 +64,15 @@ class FeatDetailsActivity : BackButtonActivity() {
             intent.putExtras(bundle)
             startActivity(intent)
         }
-        val benefitText = findViewById(R.id.benefit) as TextView
+        val benefitText = findViewById<TextView>(R.id.benefit)
         displayCharacteristic(benefitText, feat.benefit, R.string.benefit_title)
-        val normalText = findViewById(R.id.normal) as TextView
+        val normalText = findViewById<TextView>(R.id.normal)
         displayCharacteristic(normalText, feat.normal, R.string.normal_title)
-        val specialText = findViewById(R.id.special) as TextView
+        val specialText = findViewById<TextView>(R.id.special)
         displayCharacteristic(specialText, feat.special, R.string.special_title)
-        val sourceText = findViewById(R.id.source) as TextView
+        val sourceText = findViewById<TextView>(R.id.source)
         displayCharacteristic(sourceText, feat.source, R.string.source_title)
-        val specialFeatureText = findViewById(R.id.specialFeatures) as TextView
+        val specialFeatureText = findViewById<TextView>(R.id.specialFeatures)
         val builder = StringBuilder()
         addBooleanToBuilder(builder, feat.teamwork, R.string.teamwork)
         addBooleanToBuilder(builder, feat.critical, R.string.critical)
@@ -96,17 +96,17 @@ class FeatDetailsActivity : BackButtonActivity() {
         if(!builder.isEmpty()) {
             displayCharacteristic(specialFeatureText, builder.toString().removeSuffix(SEPARATOR), R.string.special_features_title)
         }
-        val raceText = findViewById(R.id.race) as TextView
+        val raceText = findViewById<TextView>(R.id.race)
         displayCharacteristic(raceText, feat.race_name, R.string.race_title)
-        val noteText = findViewById(R.id.note) as TextView
+        val noteText = findViewById<TextView>(R.id.note)
         displayCharacteristic(noteText, feat.note, R.string.note_title)
-        val goalText = findViewById(R.id.goal) as TextView
+        val goalText = findViewById<TextView>(R.id.goal)
         displayCharacteristic(goalText, feat.goal, R.string.goal_title)
-        val completeText = findViewById(R.id.completeonBenefit) as TextView
+        val completeText = findViewById<TextView>(R.id.completeonBenefit)
         displayCharacteristic(completeText, feat.completion_benefit, R.string.complete_title)
-        val traitsText = findViewById(R.id.suggestedTraits) as TextView
+        val traitsText = findViewById<TextView>(R.id.suggestedTraits)
         displayCharacteristic(traitsText, feat.suggested_traits, R.string.traits_title)
-        val skillsText = findViewById(R.id.skills) as TextView
+        val skillsText = findViewById<TextView>(R.id.skills)
         displayCharacteristic(skillsText, feat.prerequisite_feats, R.string.skills_title)
     }
 

@@ -25,7 +25,7 @@ class FilterValuesActivity : BackButtonActivity() {
         setContentView(R.layout.activity_filter_values)
         createToolbar()
         displayBackButton()
-        val list = findViewById(R.id.list) as RecyclerView
+        val list = findViewById<RecyclerView>(R.id.list)
         list.layoutManager = LinearLayoutManager(this)
         val adapter = FilterValuesAdapter(intent.getSerializableExtra(VALUE_MODE) as ValueMode, this)
         list.adapter = adapter

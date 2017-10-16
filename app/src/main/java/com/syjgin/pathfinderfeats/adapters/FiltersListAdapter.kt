@@ -10,7 +10,8 @@ import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.activities.FilterValuesActivity
 import com.syjgin.pathfinderfeats.activities.FiltersActivity
 import com.syjgin.pathfinderfeats.app.MainApp
-import com.syjgin.pathfinderfeats.holders.*
+import com.syjgin.pathfinderfeats.holders.FilterCheckboxHolder
+import com.syjgin.pathfinderfeats.holders.FilterChildHolder
 import com.syjgin.pathfinderfeats.model.FilterValues
 
 /**
@@ -35,14 +36,14 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
             CellType.Child.num -> {
                 val view = inflater.inflate(R.layout.item_filter_child, parent, false)
                 val holder = FilterChildHolder(view)
-                holder.main = view.findViewById(R.id.main) as LinearLayout
-                holder.textView = view.findViewById(R.id.categoryText) as TextView
+                holder.main = view.findViewById<LinearLayout>(R.id.main)
+                holder.textView = view.findViewById<TextView>(R.id.categoryText)
                 return holder
             }
             CellType.Checkbox.num -> {
                 val view = inflater.inflate(R.layout.item_filter_checkbox, parent, false)
                 val holder = FilterCheckboxHolder(view)
-                holder.checkbox = view.findViewById(R.id.checkbox) as AppCompatCheckBox
+                holder.checkbox = view.findViewById<AppCompatCheckBox>(R.id.checkbox)
                 return holder
             }
         }

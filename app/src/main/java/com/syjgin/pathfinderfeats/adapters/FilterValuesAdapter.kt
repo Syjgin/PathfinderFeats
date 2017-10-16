@@ -66,7 +66,7 @@ class FilterValuesAdapter(private var sourceMode: FilterValuesActivity.ValueMode
         val inflater = LayoutInflater.from(parent?.context)
         val view = inflater.inflate(R.layout.item_filter_value, parent, false)
         val holder = FilterRadioHolder(view)
-        holder.radioButton = view.findViewById(R.id.radioButton) as AppCompatRadioButton
+        holder.radioButton = view.findViewById<AppCompatRadioButton>(R.id.radioButton)
         return holder
     }
 

@@ -1,6 +1,5 @@
 package com.syjgin.pathfinderfeats.activities
 
-import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -10,21 +9,20 @@ import android.os.Looper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
-import android.text.Html
-import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewTreeObserver
-import android.widget.AbsListView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.adapters.FeatListAdapter
 import com.syjgin.pathfinderfeats.dialogs.AboutAppDialog
-import com.syjgin.pathfinderfeats.model.FilterValues
 import com.syjgin.pathfinderfeats.model.Feat
+import com.syjgin.pathfinderfeats.model.FilterValues
+import com.syjgin.pathfinderfeats.model.ProgressEvent
+import com.syjgin.pathfinderfeats.persistentData.DataStorage
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.util.*
 import java.util.concurrent.Executors
 
@@ -56,6 +54,8 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
     private lateinit var searchView : SearchView
     private lateinit var notFoundCaption : View
     private lateinit var progressBar: ProgressBar
+    private lateinit var progressBarDeteminate: ProgressBar
+    private lateinit var loadingCaption : LinearLayout
 
     private val intentQueue : LinkedList<Intent> = LinkedList()
 
@@ -91,7 +91,7 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
             if(isEmpty) {
                 notFoundCaption.visibility = View.VISIBLE
                 list.visibility = View.GONE
-                progressBar.visibility = View.GONE
+                dismissProgressbar()
             } else {
                 notFoundCaption.visibility = View.GONE
                 list.visibility = View.VISIBLE
@@ -133,9 +133,21 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         createToolbar()
-        list = findViewById(R.id.featsList) as RecyclerView
+
+        list = findViewById(R.id.featsList)
         notFoundCaption = findViewById(R.id.noResults)
-        progressBar = findViewById(R.id.progressBar) as ProgressBar
+        progressBar = findViewById(R.id.progressBar)
+        loadingCaption = findViewById(R.id.loadingDatabase)
+        progressBarDeteminate = findViewById(R.id.determinateProgressBar)
+
+        if(!DataStorage.isDbInitialized(this)) {
+            loadingCaption.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+        }
+        if(!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+
         val executor = Executors.newSingleThreadExecutor()
         adapter = FeatListAdapter(this)
         adapter?.setExecutor(executor)
@@ -249,5 +261,16 @@ class MainActivity : BackButtonActivity(), SearchView.OnQueryTextListener {
 
     fun dismissProgressbar() {
         progressBar.visibility = View.GONE
+        loadingCaption.visibility = View.GONE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe
+    fun onUnpackProgressChanged(event : ProgressEvent) {
+        progressBarDeteminate.progress = event.value
     }
 }

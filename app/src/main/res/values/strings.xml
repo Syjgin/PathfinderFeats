@@ -50,4 +50,5 @@
     <string name="filtered_feats">Filter results</string>
     <string name="info">About</string>
     <string name="close">close</string>
+    <string name="loading">unpacking database…</string>
 </resources>
