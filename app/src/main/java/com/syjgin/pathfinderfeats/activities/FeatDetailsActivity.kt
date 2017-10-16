@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import com.syjgin.pathfinderfeats.R
 import com.syjgin.pathfinderfeats.app.MainApp
@@ -54,11 +55,22 @@ class FeatDetailsActivity : BackButtonActivity() {
         val prerequisitesText = findViewById<TextView>(R.id.prerequisites)
         displayCharacteristic(prerequisitesText, feat.prerequisites, R.string.prerequisites_title)
         val childFeats = findViewById<TextView>(R.id.childFeats)
+        val showParentButton = findViewById<Button>(R.id.showParent)
         displayCharacteristic(childFeats, feat.prerequisite_feats, R.string.prerequisite_feats)
-        childFeats.setOnClickListener {
+        showParentButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             val bundle = Bundle()
             bundle.putBoolean(MainActivity.PARENT_MODE, true)
+            bundle.putInt(MainActivity.FEAT_ID, feat.id)
+            bundle.putString(MainActivity.FEAT_NAME, feat.name)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
+        val showChildButton = findViewById<Button>(R.id.showChild)
+        showChildButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            val bundle = Bundle()
+            bundle.putBoolean(MainActivity.CHILD_MODE, true)
             bundle.putInt(MainActivity.FEAT_ID, feat.id)
             bundle.putString(MainActivity.FEAT_NAME, feat.name)
             intent.putExtras(bundle)
