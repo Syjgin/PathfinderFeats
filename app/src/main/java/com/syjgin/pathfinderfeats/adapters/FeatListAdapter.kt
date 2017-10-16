@@ -180,6 +180,9 @@ class FeatListAdapter(handler: MainActivity) :
                     if(filterValues.teamwork) {
                         condition = addBooleanValueToFilter(condition, query,Feat::teamwork)
                     }
+                    if(filterValues.combat) {
+                        condition = addStringCharacteristicToFilter(condition, query, "Combat", Feat::type)
+                    }
                     val result = condition?.get() as Result<Feat>
                     featListHandler.onResult(result.count() == 0)
                     return result

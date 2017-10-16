@@ -172,6 +172,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
                     15 -> filter.shield_mastery = true
                     16 -> filter.blood_hex = true
                     17 -> filter.trick = true
+                    18 -> filter.combat = true
                 }
             }
             i++

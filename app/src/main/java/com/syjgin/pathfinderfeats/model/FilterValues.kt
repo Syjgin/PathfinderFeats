@@ -14,5 +14,5 @@ data class FilterValues(var panache : Boolean = false, var trick : Boolean = fal
                         var companion_familiar : Boolean = false, var performance : Boolean = false,
                         var style : Boolean = false, var grit : Boolean = false, var critical : Boolean = false,
                         var teamwork : Boolean = false, var sourceFilter : String = "",
-                        var raceFilter : String = "", var skillFilter : String = "") : Serializable {
+                        var raceFilter : String = "", var skillFilter : String = "", var combat : Boolean = false) : Serializable {
 }

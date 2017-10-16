@@ -19,6 +19,7 @@
         <item>Shield mastery</item>
         <item>Blood Hex</item>
         <item>Trick</item>
+        <item>Combat</item>
     </string-array>
     <string-array name="filter_string_values">
         <item>Source</item>

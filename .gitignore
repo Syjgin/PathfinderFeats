@@ -13,3 +13,4 @@ build/kotlin-build/caches/
 local.properties
 
 *.properties
+build/*
