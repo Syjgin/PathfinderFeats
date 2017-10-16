@@ -95,17 +95,22 @@ class FeatListAdapter(handler: MainActivity) :
                 val result = MainApp.instance?.dataStore?.select(Feat::class)
                         ?.where(Feat::id.eq(featListHandler.featId()))?.get() as Result<Feat>
                 if(result.count() > 0) {
-                    val namesList = result.first().prerequisite_feats.split(", ", "|", " | ")
-                    val filtered = mutableListOf<String>()
-                    for (listElement : String in namesList) {
-                        filtered.add(listElement.replace(Regex("\\(.*\\)"), "").trim())
+                    val prerequisites = result.first().prerequisite_feats as String?
+                    if(prerequisites != null) {
+                        val namesList = prerequisites.split(", ", "|", " | ")
+                        val filtered = mutableListOf<String>()
+                        for (listElement : String in namesList) {
+                            filtered.add(listElement.replace(Regex("\\(.*\\)"), "").trim())
+                        }
+                        val query = MainApp.instance?.dataStore?.select(Feat::class)
+                                ?.where(Feat::name.`in`(filtered).and(Feat::type.notLike(mythic)))
+                                ?.orderBy(Feat::name.asc())
+                                ?.get() as Result<Feat>
+                        featListHandler.onResult(query.count() == 0)
+                        return query
+                    } else {
+                        return emptyResult()
                     }
-                    val query = MainApp.instance?.dataStore?.select(Feat::class)
-                            ?.where(Feat::name.`in`(filtered).and(Feat::type.notLike(mythic)))
-                            ?.orderBy(Feat::name.asc())
-                            ?.get() as Result<Feat>
-                    featListHandler.onResult(query.count() == 0)
-                    return query
                 } else {
                     return emptyResult()
                 }

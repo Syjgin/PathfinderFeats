@@ -57,14 +57,18 @@ class FeatDetailsActivity : BackButtonActivity() {
         val childFeats = findViewById<TextView>(R.id.childFeats)
         val showParentButton = findViewById<Button>(R.id.showParent)
         displayCharacteristic(childFeats, feat.prerequisite_feats, R.string.prerequisite_feats)
-        showParentButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            val bundle = Bundle()
-            bundle.putBoolean(MainActivity.PARENT_MODE, true)
-            bundle.putInt(MainActivity.FEAT_ID, feat.id)
-            bundle.putString(MainActivity.FEAT_NAME, feat.name)
-            intent.putExtras(bundle)
-            startActivity(intent)
+        if(feat.prerequisite_feats as String? == null) {
+            showParentButton.visibility = View.GONE
+        } else {
+            showParentButton.setOnClickListener {
+                val intent = Intent(this, MainActivity::class.java)
+                val bundle = Bundle()
+                bundle.putBoolean(MainActivity.PARENT_MODE, true)
+                bundle.putInt(MainActivity.FEAT_ID, feat.id)
+                bundle.putString(MainActivity.FEAT_NAME, feat.name)
+                intent.putExtras(bundle)
+                startActivity(intent)
+            }
         }
         val showChildButton = findViewById<Button>(R.id.showChild)
         showChildButton.setOnClickListener {

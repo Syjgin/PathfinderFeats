@@ -51,6 +51,6 @@
     <string name="info">About</string>
     <string name="close">close</string>
     <string name="loading">unpacking database…</string>
-    <string name="show">show all</string>
-    <string name="show_childred">show child feats</string>
+    <string name="show_parent">show parent feats</string>
+    <string name="show_children">show child feats</string>
 </resources>

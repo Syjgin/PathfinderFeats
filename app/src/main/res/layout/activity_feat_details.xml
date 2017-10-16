@@ -63,20 +63,20 @@
                     android:paddingBottom="10dp"
                     android:textColor="@android:color/black"/>
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/showParent"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
-                    android:text="@string/show"/>
+                    android:text="@string/show_parent"/>
             </LinearLayout>
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/showChild"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
-                android:text="@string/show_childred"/>
+                android:text="@string/show_children"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
