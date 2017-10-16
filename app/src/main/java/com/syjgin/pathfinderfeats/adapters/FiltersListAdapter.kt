@@ -23,6 +23,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
     private var selectedSource: String = ""
     private var selectedRace: String = ""
     private var selectedSkill : String = ""
+    private var selectedType : String = ""
 
     enum class CellType(val num : Int) {
         Child(0),
@@ -59,6 +60,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
                 FilterValuesActivity.ValueMode.SOURCE -> selectedSource.isEmpty()
                 FilterValuesActivity.ValueMode.RACE -> selectedRace.isEmpty()
                 FilterValuesActivity.ValueMode.SKILLS -> selectedSkill.isEmpty()
+                FilterValuesActivity.ValueMode.TYPE -> selectedType.isEmpty()
                 else -> {
                     true
                 }
@@ -70,6 +72,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
                     FilterValuesActivity.ValueMode.SOURCE -> MainApp.instance?.applicationContext?.resources?.getString(R.string.source_title)
                     FilterValuesActivity.ValueMode.RACE -> MainApp.instance?.applicationContext?.resources?.getString(R.string.race_title)
                     FilterValuesActivity.ValueMode.SKILLS -> MainApp.instance?.applicationContext?.resources?.getString(R.string.skills_title)
+                    FilterValuesActivity.ValueMode.TYPE -> MainApp.instance?.applicationContext?.resources?.getString(R.string.feat_type_title)
                     else -> {
                         ""
                     }
@@ -78,6 +81,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
                     FilterValuesActivity.ValueMode.SOURCE -> selectedSource
                     FilterValuesActivity.ValueMode.RACE -> selectedRace
                     FilterValuesActivity.ValueMode.SKILLS -> selectedSkill
+                    FilterValuesActivity.ValueMode.TYPE -> selectedType
                     else -> {
                         ""
                     }
@@ -99,6 +103,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
         0 -> FilterValuesActivity.ValueMode.SOURCE
         1 -> FilterValuesActivity.ValueMode.RACE
         2 -> FilterValuesActivity.ValueMode.SKILLS
+        3 -> FilterValuesActivity.ValueMode.TYPE
         else -> {
             null
         }
@@ -134,6 +139,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
                 FilterValuesActivity.ValueMode.SOURCE -> selectedSource = selected
                 FilterValuesActivity.ValueMode.RACE -> selectedRace = selected
                 FilterValuesActivity.ValueMode.SKILLS -> selectedSkill = selected
+                FilterValuesActivity.ValueMode.TYPE -> selectedType = selected
             }
             notifyDataSetChanged()
         }
@@ -143,6 +149,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
         selectedSource = ""
         selectedRace = ""
         selectedSkill = ""
+        selectedType = ""
         checkedList.clear()
         notifyDataSetChanged()
     }
@@ -172,7 +179,6 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
                     15 -> filter.shield_mastery = true
                     16 -> filter.blood_hex = true
                     17 -> filter.trick = true
-                    18 -> filter.combat = true
                 }
             }
             i++
@@ -180,6 +186,7 @@ class FiltersListAdapter(private val activity : FiltersActivity) : RecyclerView.
         filter.sourceFilter = selectedSource
         filter.skillFilter = selectedSkill
         filter.raceFilter = selectedRace
+        filter.typeFilter = selectedType
         return filter
     }
 }

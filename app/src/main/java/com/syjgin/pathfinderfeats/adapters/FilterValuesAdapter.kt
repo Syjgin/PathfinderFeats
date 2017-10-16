@@ -25,11 +25,13 @@ class FilterValuesAdapter(private var sourceMode: FilterValuesActivity.ValueMode
             FilterValuesActivity.ValueMode.SOURCE -> MainApp.instance?.dataStore?.select(Feat::source)?.distinct()?.orderBy(Feat::source.asc())?.get()
             FilterValuesActivity.ValueMode.RACE -> MainApp.instance?.dataStore?.select(Feat::race_name)?.distinct()?.orderBy(Feat::race_name.asc())?.get()
             FilterValuesActivity.ValueMode.SKILLS -> MainApp.instance?.dataStore?.select(Feat::prerequisite_skills)?.distinct()?.get()
+            FilterValuesActivity.ValueMode.TYPE -> MainApp.instance?.dataStore?.select(Feat::type)?.distinct()?.get()
         }
         val key = when(sourceMode) {
             FilterValuesActivity.ValueMode.SOURCE -> "source"
             FilterValuesActivity.ValueMode.RACE -> "race_name"
             FilterValuesActivity.ValueMode.SKILLS -> "prerequisite_skills"
+            FilterValuesActivity.ValueMode.TYPE -> "type"
         }
         result?.each {
             val value : String? = it.get(key)
