@@ -51,7 +51,7 @@ class FeatListAdapter(handler: MainActivity) :
             MainActivity.OpenMode.SEARCH -> {
                 if(searchQuery.isNotEmpty()) {
                     val result = MainApp.instance?.dataStore?.select(Feat::class)
-                            ?.where(Feat::name.like("%$searchQuery%"))
+                            ?.where(Feat::name.like("%$searchQuery%").or(Feat::type.like("%$searchQuery%")))
                             ?.orderBy(Feat::name.asc())
                             ?.get() as Result<Feat>
                     featListHandler.onResult(result.count() == 0)
